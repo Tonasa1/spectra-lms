@@ -1703,8 +1703,15 @@ body.dark-theme .data-table tbody tr:hover {
 
 /* Responsive Overrides */
 @media (max-width: 992px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+    }
     .app-container {
         flex-direction: column;
+        height: auto;
+        min-height: 100vh;
     }
     .sidebar {
         width: 100%;
@@ -1721,6 +1728,7 @@ body.dark-theme .data-table tbody tr:hover {
     .main-layout {
         height: auto;
         flex-grow: 1;
+        overflow-y: visible;
     }
     .catalog-layout, .cart-layout, .dashboard-charts-layout {
         grid-template-columns: 1fr;
@@ -2399,7 +2407,7 @@ input[type=number]::-webkit-outer-spin-button {
     display: none;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    overflow-y: auto;
     z-index: 9999;
     font-family: 'Inter', sans-serif;
 }
