@@ -115,6 +115,47 @@ const DEFAULT_TEST_METHODS = ['SNI','Alternatif','ASTM','BS','XRF'];
 // === FORM CONFIG HELPERS (Admin can override) ===
 const IS_ONLINE_MODE = window.location.protocol !== 'file:';
 
+// === FIREBASE CLOUD DATABASE SETUP ===
+const FIREBASE_DB_URL = "https://spectra-lms-default-rtdb.asia-southeast1.firebasedatabase.app/";
+
+const originalFetch = window.fetch;
+window.fetch = async function(url, options = {}) {
+    if (FIREBASE_DB_URL && typeof url === 'string' && url.startsWith('/api/')) {
+        const endpoint = url.replace('/api/', '');
+        const firebaseTargetUrl = `${FIREBASE_DB_URL}${endpoint}.json`;
+        
+        const newOptions = { ...options };
+        if (newOptions.method === 'POST') {
+            newOptions.method = 'PUT'; // Firebase uses PUT to overwrite the entire resource
+        }
+        
+        try {
+            const response = await originalFetch(firebaseTargetUrl, newOptions);
+            
+            // Intercept response.json() to handle empty/null database from Firebase
+            const originalJson = response.json.bind(response);
+            response.json = async function() {
+                const data = await originalJson();
+                if (data === null) {
+                    // Return default initial values if database is blank
+                    if (endpoint === 'tickets') return [];
+                    if (endpoint === 'results') return {};
+                    if (endpoint === 'users') return DEFAULT_USERS;
+                    if (endpoint === 'config') return {};
+                    if (endpoint === 'announcement') return { active: true, message: "Pengujian XRF FuseBead untuk sementara tidak tersedia. Alat sedang dalam perbaikan." };
+                    if (endpoint === 'chemical-config') return { params: {}, chemicals: [] };
+                }
+                return data;
+            };
+            return response;
+        } catch (err) {
+            console.error(`Firebase fetch failed for ${firebaseTargetUrl}:`, err);
+            throw err;
+        }
+    }
+    return originalFetch(url, options);
+};
+
 let cachedTickets = null;
 let cachedResults = null;
 let cachedUsers = null;
