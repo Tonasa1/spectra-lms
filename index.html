@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPECTRA - LMS E-Commerce Portal</title>
+    <meta name="description" content="SPECTRA - Smart Platform for Excellence, Control, Tracking, Resource & Analytics">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-theme">
+<div class="app-container">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar">
+        <div>
+            <div class="sidebar-brand">
+                <div class="brand-logo">
+                    <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="9" opacity="0.85"/>
+                        <ellipse cx="12" cy="12" rx="4" ry="9" opacity="0.6"/>
+                        <line x1="12" y1="3" x2="12" y2="21" opacity="0.6"/>
+                        <line x1="3" y1="12" x2="21" y2="12" opacity="0.6"/>
+                        <path d="M2.5 16 C 5.5 10, 15.5 6, 21.5 9.5 C 16 13.5, 9.5 18.5, 2.5 16 Z" fill="currentColor" fill-opacity="0.35" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <div class="brand-info">
+                    <span class="brand-name">SPEC<span class="highlight">TRA</span></span>
+                    <span class="brand-tagline">LMS Portal</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item" id="nav-dashboard" onclick="switchScreen('dashboard');return false;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" id="nav-cart" onclick="switchScreen('cart');return false;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    <span>Permintaan Uji</span>
+                </a>
+                <a href="#" class="nav-item" id="nav-requests" onclick="switchScreen('requests');return false;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <span>Riwayat &amp; Tracker</span>
+                </a>
+                <a href="#" class="nav-item hidden" id="nav-admin" onclick="switchScreen('admin');return false;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    <span>Panel Manajemen</span>
+                </a>
+                <a href="#" class="nav-item hidden" id="nav-config" onclick="switchScreen('config');return false;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <span>Konfigurasi Sistem</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="connection-status-row" id="connection-status-row" style="display:flex;align-items:center;justify-content:space-between;padding:4px 6px;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:10px;">
+                <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);">Jaringan</span>
+                <span id="connection-status-badge" style="font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:12px;background:rgba(255,255,255,0.08);color:#fff;">Lokal (Offline)</span>
+            </div>
+            <div class="theme-toggle-row" style="display:flex;align-items:center;justify-content:space-between;padding:4px 6px;">
+                <span style="font-size:0.75rem;color:var(--text-light);">Mode Gelap</span>
+                <label class="switch" title="Ganti Tema">
+                    <input type="checkbox" id="theme-toggle-cb" onchange="toggleTheme()">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="profile-card">
+                <div class="avatar" id="user-avatar">QA</div>
+                <div class="profile-info">
+                    <span class="profile-name" id="user-name">Pengguna</span>
+                    <span class="role-badge-sidebar" id="user-role-badge">user</span>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="logout()">
+                <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Keluar
+            </button>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN LAYOUT ===== -->
+    <main class="main-layout">
+        <header class="main-header">
+            <div class="header-title-area">
+                <h1 id="screen-title">Katalog Layanan Pengujian</h1>
+                <p class="header-subtitle" id="screen-subtitle">Cari dan pesan parameter pengujian lab</p>
+            </div>
+            <div class="header-actions">
+                <div class="notification-bell" title="Notifikasi">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    <span class="notification-badge" id="notif-badge" style="display:none"></span>
+                </div>
+            </div>
+        </header>
+
+        <div class="announcement-banner" id="announcement">
+            <div class="banner-content">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" class="banner-icon"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <span><strong>INFO LAYANAN:</strong> Pengujian XRF FuseBead untuk sementara tidak tersedia. Alat sedang dalam perbaikan.</span>
+            </div>
+            <button class="banner-close" onclick="closeAnnouncement()">&times;</button>
+        </div>
+
+        <div class="screen-content">
+
+            <!-- ===== SCREEN 1: DASHBOARD ===== -->
+            <section class="screen-panel" id="screen-dashboard-panel">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner" style="margin-bottom:1.5rem;">
+                    <div class="welcome-text-area">
+                        <span class="user-greeting" id="dash-greeting">Selamat Datang</span>
+                        <h2 id="dash-welcome-title">Sistem SPECTRA LMS Siap Membantu</h2>
+                        <p>Pantau statistik pengujian dan kelola permintaan sampel laboratorium.</p>
+                    </div>
+                    <button class="btn btn-white" id="dash-new-request-btn" onclick="switchScreen('cart')">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        BUAT PERMINTAAN BARU
+                    </button>
+                </div>
+
+                <!-- KPI Grid -->
+                <div class="kpi-grid" style="margin-bottom:1.5rem;">
+                    <div class="kpi-card sample"><span class="kpi-title">TOTAL SAMPEL</span><span class="kpi-value" id="dash-kpi-total-samples">0</span><div class="kpi-badge">Kumulatif</div></div>
+                    <div class="kpi-card new"><span class="kpi-title">PERMINTAAN BARU</span><span class="kpi-value" id="dash-kpi-new-requests">0</span><div class="kpi-badge warning">Menunggu</div></div>
+                    <div class="kpi-card process"><span class="kpi-title">SEDANG DIPROSES</span><span class="kpi-value" id="dash-kpi-processing">0</span><div class="kpi-badge info">Sedang Diuji</div></div>
+                    <div class="kpi-card finish"><span class="kpi-title">SELESAI</span><span class="kpi-value" id="dash-kpi-completed">0</span><div class="kpi-badge success">Laporan Terbit</div></div>
+                    <div class="kpi-card ticket"><span class="kpi-title">TOTAL TIKET</span><span class="kpi-value" id="dash-kpi-total-tickets">0</span><div class="kpi-badge">Semua Pengajuan</div></div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="dashboard-charts-layout" style="margin-bottom:1.5rem;">
+                    <div class="card chart-card"><h3>Statistik Jenis Sampel</h3><div class="chart-container" id="dash-bar-chart-container"></div></div>
+                    <div class="card chart-card"><h3>Status Uji Terkini</h3><div class="chart-container-donut" id="dash-donut-chart-container"></div></div>
+                </div>
+
+                <!-- Top Kontributor -->
+                <div class="card table-card">
+                    <div class="table-header">
+                        <h2>Top Kontributor Pengujian</h2>
+                        <span style="font-size:0.8rem;color:var(--text-secondary);">Berdasarkan jumlah tiket yang diajukan</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead><tr><th>#</th><th>Nama</th><th>Total Tiket</th><th>Total Sampel</th><th>Selesai</th></tr></thead>
+                            <tbody id="dash-top-contributors"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SCREEN 2: FORMULIR PERMINTAAN UJI ===== -->
+            <section class="screen-panel" id="screen-cart-panel">
+                <div class="req-form-layout">
+                    <!-- LEFT: Form -->
+                    <div class="req-form-main">
+                        <div class="card" style="padding:0;overflow:hidden;">
+                            <!-- Form Header -->
+                            <div class="req-form-header">
+                                <h2>📋 Formulir Pengajuan Uji</h2>
+                            </div>
+
+                            <!-- Info Banner -->
+                            <div class="req-info-banner">
+                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                <span><strong>INFO LAYANAN LABORATORIUM:</strong> Pengujian sampel dengan metode AFR kelas FuseBead untuk sementara tidak bisa dilakukan karena alat fusi sedang dalam proses perbaikan.</span>
+                            </div>
+
+                            <div style="padding:24px;">
+                                <!-- Step 0: Asal Contoh -->
+                                <div class="req-step">
+                                    <h3 class="req-step-title">1. ASAL CONTOH <span class="req-required">*</span></h3>
+                                    <div class="origin-grid" id="origin-grid">
+                                        <button class="origin-btn" id="origin-btn-internal" onclick="selectOrigin('internal')">
+                                            <span class="origin-icon">🏭</span>
+                                            <span>Internal</span>
+                                        </button>
+                                        <button class="origin-btn" id="origin-btn-external" onclick="selectOrigin('external')">
+                                            <span class="origin-icon">🌐</span>
+                                            <span>Eksternal</span>
+                                        </button>
+                                    </div>
+                                    <!-- Sub-pilihan Internal -->
+                                    <div id="origin-internal-detail" style="display:none;margin-top:12px;">
+                                        <label style="font-size:0.85rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:8px;">Pilih Sub-Kategori Internal:</label>
+                                        <div class="origin-sub-grid" id="origin-sub-grid">
+                                            <button class="origin-sub-btn" onclick="selectOriginDetail('FM')">FM</button>
+                                            <button class="origin-sub-btn" onclick="selectOriginDetail('SILO')">SILO</button>
+                                            <button class="origin-sub-btn" onclick="selectOriginDetail('SCI')">SCI</button>
+                                            <button class="origin-sub-btn" onclick="selectOriginDetail('CL-Exp')">CL-Exp</button>
+                                            <button class="origin-sub-btn" onclick="selectOriginDetail('CL-harian')">CL-harian</button>
+                                            <button class="origin-sub-btn" onclick="selectOriginDetail('Uji Banding')">Uji Banding</button>
+                                            <button class="origin-sub-btn" onclick="selectOriginDetail('Join Test')">Join Test</button>
+                                            <button class="origin-sub-btn" onclick="selectOriginDetail('statistik')">statistik</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2: Material -->
+                                <div class="req-step">
+                                    <h3 class="req-step-title">2. PILIH MATERIAL <span class="req-required">*</span></h3>
+                                    <div class="material-grid" id="material-grid"></div>
+                                </div>
+
+                                <!-- Step 3: Parameter Uji -->
+                                <div class="req-step">
+                                    <h3 class="req-step-title">3. PARAMETER UJI <span class="req-required">*</span></h3>
+                                    <div class="param-group-pills" id="param-group-pills"></div>
+                                    <div id="param-detail-area"></div>
+                                </div>
+
+                                <!-- Step 4: Metode (multi-select checkbox) -->
+                                <div class="req-step" id="method-step">
+                                    <div class="req-method-fieldset">
+                                        <legend class="req-step-subtitle">Metode Standar Pengujian <span class="req-required">*</span> <small style="font-weight:400;color:var(--text-light);">(Bisa pilih lebih dari satu)</small></legend>
+                                        <div class="method-radio-group" id="method-radio-group"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4: Jumlah Sampel -->
+                                <div class="req-step">
+                                    <h3 class="req-step-title">JUMLAH SAMPEL <span class="req-required">*</span></h3>
+                                    <input type="number" class="req-number-input" id="req-sample-count" value="1" min="1" max="50">
+                                </div>
+
+                                <!-- Step 5: Nama Sampel -->
+                                <div class="req-step">
+                                    <h3 class="req-step-title">NAMA / KODE SAMPEL <span class="req-required">*</span></h3>
+                                    <input type="text" class="req-text-input" id="req-sample-name" placeholder="Contoh: Semen OPC Lot-A, Klinker Batch-3...">
+                                </div>
+
+                                <!-- Step 6: Keterangan -->
+                                <div class="req-step">
+                                    <h3 class="req-step-title">KETERANGAN TAMBAHAN (OPSIONAL)</h3>
+                                    <input type="text" class="req-text-input" id="req-notes" placeholder="Contoh: Outfall Clay, Stream Sample, Kondisi basah...">
+                                </div>
+
+                                <!-- Self Service Mode -->
+                                <div class="self-service-box">
+                                    <label class="self-service-label">
+                                        <input type="checkbox" id="req-self-service" class="self-service-cb">
+                                        <div class="self-service-text">
+                                            <strong>Mode Self Service</strong>
+                                            <span>Uji mandiri oleh user (Tanpa Laporan)</span>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <!-- Add Button -->
+                                <button class="btn btn-primary btn-block btn-lg req-add-btn" id="req-add-btn" onclick="addToRequestList()">
+                                    + TAMBAHKAN KE LIST
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Sample List Sidebar -->
+                    <div class="req-form-sidebar">
+                        <div class="card req-sidebar-card">
+                            <div class="req-sidebar-header">
+                                <h3>🧪 List Sampel (<span id="req-list-count">0</span>)</h3>
+                                <button class="btn btn-outline btn-sm text-danger" onclick="clearRequestList()" id="req-clear-btn" style="display:none;">HAPUS SEMUA</button>
+                            </div>
+                            <div id="req-list-items"></div>
+                            <div class="req-list-empty" id="req-list-empty">
+                                <div style="font-size:2.5rem;">🧪</div>
+                                <p>Belum ada sampel</p>
+                            </div>
+                            <div class="req-list-summary" id="req-list-summary" style="display:none;">
+                                <div class="summary-divider"></div>
+                                <div class="summary-row"><span>Total Sampel</span><span id="req-summary-samples">0</span></div>
+                                <div class="summary-row"><span>Total Parameter</span><span id="req-summary-params">0</span></div>
+                                <div class="summary-divider"></div>
+                                <button class="btn btn-primary btn-block btn-lg" id="req-submit-btn" onclick="submitRequestFromForm()">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    KIRIM PERMINTAAN UJI
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SCREEN 3: REQUESTS / TRACKER ===== -->
+            <section class="screen-panel" id="screen-requests-panel">
+                <div class="welcome-banner">
+                    <div class="welcome-text-area">
+                        <span class="user-greeting" id="welcome-greeting">Selamat Datang</span>
+                        <h2>Sistem SPECTRA LMS Siap Membantu</h2>
+                        <p>Pantau status pengujian dan unduh laporan hasil analisa Anda di sini.</p>
+                    </div>
+                    <button class="btn btn-white" id="new-request-btn" onclick="switchScreen('cart')">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        BUAT PERMINTAAN BARU
+                    </button>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card sample"><span class="kpi-title">TOTAL SAMPEL</span><span class="kpi-value" id="kpi-total-samples">0</span><div class="kpi-badge">Kumulatif</div></div>
+                    <div class="kpi-card new"><span class="kpi-title">PERMINTAAN BARU</span><span class="kpi-value" id="kpi-new-requests">0</span><div class="kpi-badge warning">Menunggu Sampel</div></div>
+                    <div class="kpi-card process"><span class="kpi-title">DIPROSES</span><span class="kpi-value" id="kpi-processing">0</span><div class="kpi-badge info">Sedang Diuji</div></div>
+                    <div class="kpi-card finish"><span class="kpi-title">SELESAI</span><span class="kpi-value" id="kpi-completed">0</span><div class="kpi-badge success">Laporan Terbit</div></div>
+                    <div class="kpi-card ticket"><span class="kpi-title">TOTAL TIKET</span><span class="kpi-value" id="kpi-total-tickets">0</span><div class="kpi-badge">Semua Pengajuan</div></div>
+                </div>
+
+                <div class="dashboard-charts-layout">
+                    <div class="card chart-card"><h3>Statistik Jenis Sampel</h3><div class="chart-container" id="bar-chart-container"></div></div>
+                    <div class="card chart-card"><h3>Status Uji Terkini</h3><div class="chart-container-donut" id="donut-chart-container"></div></div>
+                </div>
+
+                <div class="card table-card">
+                    <div class="table-header">
+                        <h2>Riwayat Tiket Pengujian</h2>
+                        <div class="table-filters">
+                            <input type="text" id="ticket-search" placeholder="Cari Kode Tiket..." onkeyup="filterTicketsTable()">
+                            <select id="ticket-status-filter" onchange="filterTicketsTable()">
+                                <option value="all">Semua Status</option>
+                                <option value="Baru">Baru</option>
+                                <option value="Diproses">Diproses</option>
+                                <option value="Menunggu Approval">Menunggu Approval</option>
+                                <option value="Selesai">Selesai</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Tiket</th>
+                                    <th>Tanggal</th>
+                                    <th>Jumlah Sampel</th>
+                                    <th>Metode Uji</th>
+                                    <th>Status</th>
+                                    <th>Keterangan Lab</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tickets-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SCREEN 4: ADMIN / MANAGEMENT PANEL ===== -->
+            <section class="screen-panel" id="screen-admin-panel">
+                <div class="card table-card">
+                    <div class="table-header">
+                        <div>
+                            <h2>Panel Manajemen Pengujian</h2>
+                            <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:4px;" id="panel-role-desc">Kelola dan update status pengujian sampel masuk.</p>
+                        </div>
+                        <div class="table-filters">
+                            <input type="text" id="admin-search" placeholder="Cari Tiket..." onkeyup="filterAdminTable()">
+                            <select id="admin-status-filter" onchange="filterAdminTable()">
+                                <option value="all">Semua Status</option>
+                                <option value="Baru">Baru</option>
+                                <option value="Diproses">Diproses</option>
+                                <option value="Menunggu Approval">Menunggu Approval</option>
+                                <option value="Selesai">Selesai</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Tiket</th>
+                                    <th>Pengaju</th>
+                                    <th>Tanggal</th>
+                                    <th>Parameter Uji</th>
+                                    <th>Jumlah Sampel</th>
+                                    <th>Status</th>
+                                    <th>Keterangan Lab</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SCREEN 5: KONFIGURASI SISTEM (Admin Only) ===== -->
+            <section class="screen-panel" id="screen-config-panel">
+                <div class="config-header">
+                    <h2>⚙️ Konfigurasi Sistem</h2>
+                    <span class="badge badge-primary">Admin Only</span>
+                </div>
+
+                <div class="config-tabs-nav">
+                    <button class="cfg-tab-btn active" id="cfg-tab-users-btn" onclick="switchConfigTab('users')">👥 Manajemen User</button>
+                    <button class="cfg-tab-btn" id="cfg-tab-prices-btn" onclick="switchConfigTab('prices')">💰 Harga Katalog</button>
+                    <button class="cfg-tab-btn" id="cfg-tab-items-btn" onclick="switchConfigTab('items')">🧪 Item Katalog</button>
+                    <button class="cfg-tab-btn" id="cfg-tab-params-btn" onclick="switchConfigTab('params')">🔬 Parameter Uji</button>
+                    <button class="cfg-tab-btn" id="cfg-tab-form-btn" onclick="switchConfigTab('form')">📋 Konfigurasi Form</button>
+                    <button class="cfg-tab-btn" id="cfg-tab-announcement-btn" onclick="switchConfigTab('announcement')">📢 Info Layanan</button>
+                    <button class="cfg-tab-btn" id="cfg-tab-chemical-btn" onclick="switchConfigTab('chemical')">⚗️ Bahan Kimia &amp; Biaya</button>
+                    <button class="cfg-tab-btn" id="cfg-tab-report-btn" onclick="switchConfigTab('report')">📊 Laporan Periodik</button>
+                </div>
+
+                <!-- Tab: User Management -->
+                <div class="config-tab-pane active" id="config-tab-users">
+                    <div class="card table-card">
+                        <div class="table-header">
+                            <h2>Daftar Pengguna</h2>
+                            <button class="btn btn-primary btn-sm" onclick="openUserModal()">+ Tambah User</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead><tr><th>Username</th><th>Nama Lengkap</th><th>Peran</th><th>Aksi</th></tr></thead>
+                                <tbody id="users-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Catalog Prices -->
+                <div class="config-tab-pane" id="config-tab-prices">
+                    <div class="card table-card">
+                        <div class="table-header">
+                            <h2>Edit Harga Katalog</h2>
+                            <button class="btn btn-primary btn-sm" onclick="saveAllPrices()">💾 Simpan Semua Harga</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead><tr><th>Kode</th><th>Nama Parameter</th><th>Kategori</th><th>TAT (Hari)</th><th>Harga (Rp)</th></tr></thead>
+                                <tbody id="prices-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Catalog Items -->
+                <div class="config-tab-pane" id="config-tab-items">
+                    <div class="card table-card">
+                        <div class="table-header">
+                            <h2>Kelola Item Katalog</h2>
+                            <button class="btn btn-primary btn-sm" onclick="openCatalogItemModal()">+ Tambah Item</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead><tr><th>Kode</th><th>Nama Parameter</th><th>Kategori</th><th>Harga</th><th>TAT</th><th>Aksi</th></tr></thead>
+                                <tbody id="items-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Test Parameters -->
+                <div class="config-tab-pane" id="config-tab-params">
+                    <div class="card" style="margin-bottom:1.5rem;">
+                        <h3 style="margin-bottom:12px;">Pilih Item Katalog</h3>
+                        <select id="params-item-select" onchange="loadItemParams()" style="width:100%;padding:10px;border:1.5px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-family:var(--font-body);font-size:0.875rem;outline:none;">
+                            <option value="">-- Pilih item untuk edit parameter --</option>
+                        </select>
+                    </div>
+                    <div class="card" id="params-editor-card" style="display:none;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                            <h3 id="params-item-name">Parameter Pengujian</h3>
+                            <button class="btn btn-primary btn-sm" onclick="saveItemParams()">💾 Simpan Parameter</button>
+                        </div>
+                        <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:10px;">Tambah atau hapus parameter analisa untuk item ini:</p>
+                        <div class="param-tags" id="params-tag-list"></div>
+                        <div class="param-input-row" style="margin-top:12px;">
+                            <input type="text" id="new-param-input" placeholder="Nama parameter (e.g. SiO₂, Al₂O₃...)" class="form-field-group" style="padding:8px 12px;border:1.5px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-family:var(--font-body);font-size:0.875rem;outline:none;flex:1;" onkeydown="if(event.key==='Enter'){addParam();event.preventDefault();}">
+                            <button class="btn btn-primary btn-sm" onclick="addParam()">+ Tambah</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Form Configuration (Admin Only) -->
+                <div class="config-tab-pane" id="config-tab-form">
+                    <div class="card" style="margin-bottom:1.5rem;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+                            <div>
+                                <h3 style="margin-bottom:4px;">📋 Konfigurasi Form Permintaan Uji</h3>
+                                <p style="font-size:0.875rem;color:var(--text-secondary);">Aktifkan/nonaktifkan material, parameter, dan metode standar pengujian pada form order.</p>
+                            </div>
+                            <button class="btn btn-outline btn-sm" onclick="resetFormConfig()">🔄 Reset Default</button>
+                        </div>
+                    </div>
+                    
+                    <div style="display:grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap:1.5rem;">
+                        <!-- Col 1: Material & Metode -->
+                        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+                            <!-- Materials -->
+                            <div class="card">
+                                <h3 style="margin-bottom:12px;border-bottom:1px solid var(--border-color);padding-bottom:8px;">📦 Pilihan Material</h3>
+                                <div id="fcfg-materials" style="display:flex;flex-direction:column;gap:12px;"></div>
+                            </div>
+                            <!-- Methods -->
+                            <div class="card">
+                                <h3 style="margin-bottom:12px;border-bottom:1px solid var(--border-color);padding-bottom:8px;">📐 Metode Pengujian</h3>
+                                <div id="fcfg-methods" style="display:flex;flex-direction:column;gap:12px;"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Col 2: Parameters -->
+                        <div class="card">
+                            <h3 style="margin-bottom:12px;border-bottom:1px solid var(--border-color);padding-bottom:8px;">🔬 Parameter Pengujian</h3>
+                            <div id="fcfg-params" style="display:flex;flex-direction:column;gap:16px;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab: Announcement / Info Layanan -->
+                <div class="config-tab-pane" id="config-tab-announcement">
+                    <div class="card" style="max-width: 600px;">
+                        <h3 style="margin-bottom:16px;">📢 Konfigurasi Info Layanan (Banner)</h3>
+                        <div class="form-field-group" style="margin-bottom:16px;">
+                            <label class="checkbox-container" style="font-weight:600;color:var(--text-primary);">
+                                Tampilkan Info Layanan di Halaman Utama
+                                <input type="checkbox" id="cfg-announcement-active">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="form-field-group" style="margin-bottom:20px;">
+                            <label style="display:block;font-size:0.875rem;font-weight:600;margin-bottom:8px;color:var(--text-secondary);">Pesan Info Layanan</label>
+                            <textarea id="cfg-announcement-message" rows="4" placeholder="Tuliskan informasi penting layanan di sini..." style="width:100%;padding:10px;border:1.5px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-family:var(--font-body);font-size:0.875rem;outline:none;resize:vertical;"></textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="saveAnnouncementConfig()">💾 Simpan Konfigurasi</button>
+                    </div>
+                </div>
+
+                <!-- Tab: Bahan Kimia & Biaya -->
+                <div class="config-tab-pane" id="config-tab-chemical">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:1.5rem;">
+                        <div>
+                            <h3 style="margin-bottom:4px;">⚗️ Konfigurasi Bahan Kimia &amp; Biaya Per Parameter</h3>
+                            <p style="font-size:0.875rem;color:var(--text-secondary);">Atur bahan kimia yang digunakan dan biaya pengujian untuk setiap parameter analisa.</p>
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="saveChemsConfig()">💾 Simpan Semua</button>
+                    </div>
+                    <div class="card table-card">
+                        <div class="table-responsive">
+                            <table class="data-table" id="chemical-config-table">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter Uji</th>
+                                        <th>Metode Standar Pengujian</th>
+                                        <th>Metode Analisa Kimia</th>
+                                        <th>Bahan Kimia</th>
+                                        <th>Jumlah</th>
+                                        <th>Harga</th>
+                                        <th>Biaya (Rp)</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="chemical-config-table-body"></tbody>
+                            </table>
+                            <div style="padding:16px;">
+                                <button class="btn btn-outline btn-sm" onclick="addChemicalConfigRow()">+ Tambah Kombinasi Metode</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Laporan Periodik -->
+                <div class="config-tab-pane" id="config-tab-report">
+                    <div class="card" style="margin-bottom:1.5rem;">
+                        <h3 style="margin-bottom:16px;">📊 Laporan Pemakaian Bahan Kimia &amp; Biaya Pengujian</h3>
+                        <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px;">
+                            <div class="form-field-group" style="min-width:160px;margin:0;">
+                                <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--text-secondary);">Tanggal Mulai</label>
+                                <input type="date" id="report-date-start" style="width:100%;padding:8px;border:1.5px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:0.875rem;outline:none;">
+                            </div>
+                            <div class="form-field-group" style="min-width:160px;margin:0;">
+                                <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--text-secondary);">Tanggal Selesai</label>
+                                <input type="date" id="report-date-end" style="width:100%;padding:8px;border:1.5px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:0.875rem;outline:none;">
+                            </div>
+                            <button class="btn btn-primary" onclick="generateReport()">🔍 Tampilkan Laporan</button>
+                        </div>
+                    </div>
+
+                    <div id="report-results" style="display:none;">
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;">
+                            <!-- Summary Cards -->
+                            <div class="card">
+                                <h3 style="margin-bottom:16px;">💰 Ringkasan Biaya</h3>
+                                <div id="report-cost-summary"></div>
+                            </div>
+                            <div class="card">
+                                <h3 style="margin-bottom:16px;">🧪 Ringkasan Sampel</h3>
+                                <div id="report-sample-summary"></div>
+                            </div>
+                        </div>
+                        <div class="card table-card" style="margin-top:1.5rem;">
+                            <h3 style="margin-bottom:16px;">⚗️ Rekapitulasi Pemakaian Bahan Kimia</h3>
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead><tr><th>Bahan Kimia</th><th>Satuan</th><th>Total Pemakaian</th><th>Keterangan</th></tr></thead>
+                                    <tbody id="report-chem-table-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card table-card" style="margin-top:1.5rem;">
+                            <h3 style="margin-bottom:16px;">📋 Detail Tiket Periode Ini</h3>
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead><tr><th>ID Tiket</th><th>Tanggal</th><th>Pengaju</th><th>Parameter</th><th>Jumlah Sampel</th><th>Biaya</th></tr></thead>
+                                    <tbody id="report-ticket-table-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- /screen-content -->
+    </main>
+</div><!-- /app-container -->
+
+<!-- ===== MODALS ===== -->
+
+<!-- Modal 1: Ticket Detail -->
+<div class="modal-backdrop" id="ticket-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <div>
+                <h2 class="modal-title" id="modal-ticket-id">Detail Tiket</h2>
+                <span class="modal-date" id="modal-ticket-date"></span>
+            </div>
+            <button class="modal-close" onclick="closeModal('ticket-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="timeline-container">
+                <div class="timeline-step" id="step-ordered"><div class="step-icon">🛒</div><div class="step-label">Pengajuan</div><div class="step-time" id="time-ordered">-</div></div>
+                <div class="timeline-step" id="step-received"><div class="step-icon">📦</div><div class="step-label">Sampel Diterima</div><div class="step-time" id="time-received">-</div></div>
+                <div class="timeline-step" id="step-testing"><div class="step-icon">🔬</div><div class="step-label">Pengujian Lab</div><div class="step-time" id="time-testing">-</div></div>
+                <div class="timeline-step" id="step-approved"><div class="step-icon">✍️</div><div class="step-label">Validasi</div><div class="step-time" id="time-approved">-</div></div>
+                <div class="timeline-step" id="step-completed"><div class="step-icon">🏆</div><div class="step-label">Selesai</div><div class="step-time" id="time-completed">-</div></div>
+            </div>
+            <div class="modal-divider"></div>
+            <div class="modal-info-grid">
+                <div><strong>Pengaju:</strong><p id="modal-requester-name">-</p></div>
+                <div><strong>Status:</strong><p id="modal-status">-</p></div>
+                <div><strong>TAT:</strong><p id="modal-tat">-</p></div>
+                <div><strong>Estimasi Selesai:</strong><p id="modal-est-complete">-</p></div>
+            </div>
+            <!-- Lab Remarks Area -->
+            <div style="margin-top:16px; padding:12px 16.97px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:8px;">
+                <strong style="font-size:0.85rem;color:var(--text-primary);">Keterangan Lab:</strong>
+                <p id="modal-lab-remarks" style="font-size:0.8rem; margin-top:4px; color:var(--text-secondary); white-space:pre-wrap;">Tidak ada keterangan lab.</p>
+            </div>
+            <div class="modal-divider"></div>
+            <h3>Daftar Sampel Uji</h3>
+            <div class="modal-samples-list" id="modal-samples-list"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('ticket-modal')">Tutup</button>
+            <div id="modal-detail-approval-btns" style="display:none; gap:8px; align-items:center; margin-left:auto;">
+                <button class="btn btn-outline btn-sm" id="modal-detail-view-pdf-btn" onclick="viewPDFFromDetail()">👁️ Lihat Hasil</button>
+                <button class="btn-danger btn-sm" onclick="rejectFromDetail()">✗ Tolak</button>
+                <button class="btn-success btn-sm" onclick="approveFromDetail()">✓ Setujui</button>
+            </div>
+            <button class="btn btn-outline hidden" id="modal-kaji-ulang-btn" onclick="printKajiUlangFromModal()">
+                🖨️ Cetak Kaji Ulang
+            </button>
+            <button class="btn btn-outline hidden" id="modal-cert-btn" onclick="printApprovalCertificate()">
+                🖨️ Cetak Pengesahan
+            </button>
+            <button class="btn btn-primary hidden" id="modal-download-btn" onclick="downloadPDFFromModal()">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Unduh Hasil Uji
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 2: Print Sample Label -->
+<div class="modal-backdrop" id="label-modal">
+    <div class="modal-container modal-sm printable-modal">
+        <div class="modal-header">
+            <h2>Cetak Label Wadah Sampel</h2>
+            <button class="modal-close" onclick="closeModal('label-modal')">&times;</button>
+        </div>
+        <div class="modal-body label-print-body" id="label-print-body"></div>
+        <div class="modal-footer no-print">
+            <button class="btn btn-outline" onclick="closeModal('label-modal')">Batal</button>
+            <button class="btn btn-primary" onclick="printSampleLabel()">🖨️ Cetak Label</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 3: User Form (Admin) -->
+<div class="modal-backdrop modal-sm" id="user-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 id="user-modal-title">Tambah User Baru</h2>
+            <button class="modal-close" onclick="closeModal('user-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="user-edit-id">
+            <div class="form-field-group">
+                <label>Username</label>
+                <input type="text" id="user-form-username" placeholder="e.g. john_doe">
+            </div>
+            <div class="form-field-group">
+                <label>Nama Lengkap</label>
+                <input type="text" id="user-form-name" placeholder="e.g. John Doe">
+            </div>
+            <div class="form-field-group">
+                <label>Password</label>
+                <input type="password" id="user-form-password" placeholder="Min. 4 karakter">
+            </div>
+            <div class="form-field-group">
+                <label>Peran</label>
+                <select id="user-form-role">
+                    <option value="user">User</option>
+                    <option value="operator">Operator</option>
+                    <option value="manager">Manager</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('user-modal')">Batal</button>
+            <button class="btn btn-primary" onclick="saveUser()">💾 Simpan</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 4: Catalog Item Form (Admin) -->
+<div class="modal-backdrop modal-md" id="catalog-item-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 id="item-modal-title">Tambah Item Katalog</h2>
+            <button class="modal-close" onclick="closeModal('catalog-item-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="item-edit-id">
+            <div class="form-row">
+                <div class="form-field-group">
+                    <label>Kode Item</label>
+                    <input type="text" id="item-form-id" placeholder="e.g. TL-NEW-01">
+                </div>
+                <div class="form-field-group">
+                    <label>Kategori</label>
+                    <select id="item-form-category">
+                        <option value="kimia">Analisis Kimia</option>
+                        <option value="mineral">Analisis Mineralogi</option>
+                        <option value="fisik">Uji Fisik &amp; Mekanik</option>
+                        <option value="batubara">Energi &amp; Batubara</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-field-group">
+                <label>Nama Parameter</label>
+                <input type="text" id="item-form-name" placeholder="e.g. Analisis Silika Total">
+            </div>
+            <div class="form-field-group">
+                <label>Deskripsi Singkat</label>
+                <textarea id="item-form-desc" placeholder="Deskripsi metode pengujian..."></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-field-group">
+                    <label>Harga (Rp)</label>
+                    <input type="number" id="item-form-price" placeholder="150000">
+                </div>
+                <div class="form-field-group">
+                    <label>TAT (hari)</label>
+                    <input type="number" id="item-form-tat" placeholder="2" min="0.5" step="0.5">
+                </div>
+            </div>
+            <div class="form-field-group">
+                <label>Metode Analisis</label>
+                <input type="text" id="item-form-method" placeholder="e.g. XRF, AAS, Gravimetri">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('catalog-item-modal')">Batal</button>
+            <button class="btn btn-primary" onclick="saveCatalogItem()">💾 Simpan Item</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 5: PDF Viewer -->
+<div class="modal-backdrop modal-xl" id="pdf-viewer-modal">
+    <div class="modal-container" style="max-width:900px;">
+        <div class="modal-header">
+            <div>
+                <h2 id="pdf-viewer-title">Lihat Hasil Uji</h2>
+                <span style="font-size:0.8rem;color:var(--text-secondary);" id="pdf-viewer-sub"></span>
+            </div>
+            <button class="modal-close" onclick="closeModal('pdf-viewer-modal')">&times;</button>
+        </div>
+        <div class="modal-body" style="padding-bottom:0;">
+            <div class="pdf-info-bar" id="pdf-info-bar">
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span id="pdf-file-info">Memuat...</span>
+            </div>
+            <div class="pdf-iframe-wrapper" id="pdf-iframe-wrapper">
+                <iframe id="pdf-iframe" title="PDF Viewer"></iframe>
+            </div>
+            <div id="excel-download-wrapper" style="display:none; text-align:center; padding: 60px 20px;">
+                <svg viewBox="0 0 24 24" width="64" height="64" stroke="var(--primary-color)" stroke-width="1.5" fill="none" style="margin-bottom:16px;margin:0 auto;display:block;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <h3 style="margin-bottom:10px;">Laporan Berformat Excel</h3>
+                <p style="color:var(--text-secondary); margin-bottom:20px;">Format Excel tidak dapat ditampilkan langsung di browser.</p>
+                <button class="btn btn-primary" onclick="downloadPDFFromModal()">📥 Unduh File Excel Sekarang</button>
+            </div>
+        </div>
+        <div class="modal-footer" id="pdf-modal-footer" style="margin-top:12px;">
+            <button class="btn btn-outline" onclick="closeModal('pdf-viewer-modal')">Tutup</button>
+            <div class="action-btns" id="pdf-approval-btns" style="display:none;">
+                <button class="btn-danger" id="reject-pdf-btn" onclick="openRejectModal()">✗ Tolak</button>
+                <button class="btn-success" id="approve-pdf-btn" onclick="approvePDFFromModal()">✓ Setujui Hasil Uji</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 6: Reject Reason -->
+<div class="modal-backdrop modal-sm" id="reject-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2>Tolak Hasil Uji</h2>
+            <button class="modal-close" onclick="closeModal('reject-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:8px;">Berikan catatan alasan penolakan untuk operator:</p>
+            <textarea class="reject-note-area" id="reject-note" placeholder="e.g. Data tidak lengkap, file rusak, nilai di luar range..."></textarea>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('reject-modal')">Batal</button>
+            <button class="btn-danger" onclick="confirmReject()">✗ Konfirmasi Tolak</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 7: Edit Lab Remarks -->
+<div class="modal-backdrop modal-sm" id="remarks-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2>Keterangan Pengujian Lab</h2>
+            <button class="modal-close" onclick="closeModal('remarks-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="remarks-ticket-id">
+            <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:8px;">Berikan keterangan penyesuaian pengujian jikalau ada:</p>
+            <textarea class="form-field-group" id="remarks-text" placeholder="Tulis catatan penyesuaian analisa (e.g. Metode diganti ke AAS karena X, sampel diuji ulang...)" style="width:100%;padding:10px;border:1.5px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-family:var(--font-body);font-size:0.875rem;outline:none;resize:vertical;" rows="4"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('remarks-modal')">Batal</button>
+            <button class="btn btn-primary" onclick="saveLabRemarks()">💾 Simpan Keterangan</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 8: Kaji Ulang Permintaan (Admin) -->
+<div class="modal-backdrop modal-xl" id="kaji-ulang-modal">
+    <div class="modal-container" style="max-width:800px;">
+        <div class="modal-header">
+            <div>
+                <h2>Kaji Ulang Permintaan Pengujian</h2>
+                <span style="font-size:0.8rem;color:var(--text-secondary);" id="kaji-ulang-sub"></span>
+            </div>
+            <button class="modal-close" onclick="closeModal('kaji-ulang-modal')">&times;</button>
+        </div>
+        <div class="modal-body" style="padding-bottom:16px;">
+            <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:16px;">Silakan tinjau dan tetapkan status untuk masing-masing parameter yang diminta sebelum menyetujui tiket ini.</p>
+            <div class="table-responsive">
+                <table class="data-table" style="font-size:0.875rem;">
+                    <thead>
+                        <tr>
+                            <th width="40">No</th>
+                            <th>Parameter Uji</th>
+                            <th width="150">Status</th>
+                            <th>Keterangan (Opsional)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kaji-ulang-tbody">
+                        <!-- Rendered via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('kaji-ulang-modal')">Batal</button>
+            <button class="btn btn-primary" onclick="saveKajiUlangAndApprove()">✅ Simpan & Setujui Tiket</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== LOGIN SCREEN OVERLAY (Admin/User/Operator/Manager) ===== -->
+<div id="screen-login-panel">
+    <div class="bg-gradient"></div>
+    <div class="grid-overlay"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="login-wrapper">
+        <div class="login-card">
+            <!-- Brand -->
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" width="26" height="26" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="9" opacity="0.85"/>
+                        <ellipse cx="12" cy="12" rx="4" ry="9" opacity="0.6"/>
+                        <line x1="12" y1="3" x2="12" y2="21" opacity="0.6"/>
+                        <line x1="3" y1="12" x2="21" y2="12" opacity="0.6"/>
+                        <path d="M2.5 16 C 5.5 10, 15.5 6, 21.5 9.5 C 16 13.5, 9.5 18.5, 2.5 16 Z" fill="white" fill-opacity="0.35" stroke="white" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>SPEC<span>TRA</span></h1>
+                    <p>Smart Platform for Excellence, Control, Tracking, Resource & Analytics</p>
+                </div>
+            </div>
+
+            <!-- Heading -->
+            <div class="login-heading">
+                <h2>Masuk ke Sistem</h2>
+                <p>Gunakan akun yang telah diberikan oleh Admin Lab</p>
+            </div>
+
+            <!-- Error Box -->
+            <div class="error-box" id="error-box">
+                <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.5" fill="none" flex-shrink="0">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span id="error-text">Username atau password salah.</span>
+            </div>
+
+            <!-- Form -->
+            <form id="login-form" onsubmit="handleLogin(event)" novalidate>
+                <div class="form-field">
+                    <label for="username">Username</label>
+                    <div class="input-wrap">
+                        <span class="icon">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </span>
+                        <input type="text" id="username" placeholder="Masukkan username" autocomplete="username" required>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="password">Password</label>
+                    <div class="input-wrap">
+                        <span class="icon">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                        </span>
+                        <input type="password" id="password" placeholder="Masukkan password" autocomplete="current-password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-signin" id="signin-btn">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                    Masuk
+                </button>
+            </form>
+
+            <!-- Demo Accounts -->
+            <div class="divider"><span>Klik untuk login cepat</span></div>
+            <div class="demo-title">Akun Demo</div>
+            <div class="accounts-grid">
+                <button class="acc-chip" onclick="quickLogin('admin','admin123')">
+                    <div class="acc-role role-admin">⚙️ Admin</div>
+                    <div class="acc-creds">admin / admin123</div>
+                </button>
+                <button class="acc-chip" onclick="quickLogin('manager1','mgr123')">
+                    <div class="acc-role role-manager">👔 Manager</div>
+                    <div class="acc-creds">manager1 / mgr123</div>
+                </button>
+                <button class="acc-chip" onclick="quickLogin('operator1','op123')">
+                    <div class="acc-role role-operator">🔬 Operator</div>
+                    <div class="acc-creds">operator1 / op123</div>
+                </button>
+                <button class="acc-chip" onclick="quickLogin('user1','user123')">
+                    <div class="acc-role role-user">👤 User</div>
+                    <div class="acc-creds">user1 / user123</div>
+                </button>
+            </div>
+
+            <p class="footer">SPECTRA LMS Portal &copy; 2026 &mdash; Semua hak dilindungi</p>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

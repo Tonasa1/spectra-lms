@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPECTRA - Login Portal</title>
+    <meta name="description" content="Login ke SPECTRA - Smart Platform for Excellence, Control, Tracking, Resource & Analytics">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: #070c1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bg-gradient {
+            position: fixed; inset: 0;
+            background: 
+                radial-gradient(ellipse 700px 500px at 80% 10%, rgba(190,18,60,0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 400px at 10% 80%, rgba(99,102,241,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 300px at 50% 50%, rgba(15,23,42,0.8) 0%, transparent 100%),
+                linear-gradient(135deg, #070c1a 0%, #0d1528 50%, #0a0f1e 100%);
+            z-index: 0;
+        }
+
+        .grid-overlay {
+            position: fixed; inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 1;
+        }
+
+        .particles { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            animation: float-up linear infinite;
+        }
+        @keyframes float-up {
+            0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+            10%  { opacity: 1; }
+            90%  { opacity: 1; }
+            100% { transform: translateY(-5vh) scale(1); opacity: 0; }
+        }
+
+        .login-wrapper {
+            position: relative; z-index: 10;
+            width: 100%; max-width: 440px;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 28px;
+            padding: 44px 40px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset;
+        }
+
+        .brand {
+            display: flex; align-items: center; gap: 14px;
+            margin-bottom: 36px;
+        }
+        .brand-icon {
+            width: 52px; height: 52px; border-radius: 16px;
+            background: linear-gradient(135deg, #be123c 0%, #e11d48 100%);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 24px rgba(190,18,60,0.45);
+            flex-shrink: 0;
+        }
+        .brand-text h1 {
+            font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800;
+            color: #fff; letter-spacing: -0.5px; line-height: 1;
+        }
+        .brand-text h1 span { color: #fb7185; }
+        .brand-text p { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+
+        .login-heading { margin-bottom: 28px; }
+        .login-heading h2 {
+            font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700;
+            color: #fff; margin-bottom: 4px;
+        }
+        .login-heading p { font-size: 13px; color: rgba(255,255,255,0.45); }
+
+        .error-box {
+            display: none; align-items: center; gap: 10px;
+            background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25);
+            border-radius: 12px; padding: 11px 14px;
+            font-size: 13px; color: #fca5a5; margin-bottom: 20px;
+        }
+        .error-box.show { display: flex; }
+
+        .form-field { margin-bottom: 18px; }
+        .form-field label {
+            display: block; font-size: 12.5px; font-weight: 500;
+            color: rgba(255,255,255,0.6); margin-bottom: 8px; letter-spacing: 0.2px;
+        }
+        .input-wrap { position: relative; }
+        .input-wrap .icon {
+            position: absolute; left: 14px; top: 50%;
+            transform: translateY(-50%); color: rgba(255,255,255,0.28);
+            pointer-events: none; display: flex;
+        }
+        .input-wrap input {
+            width: 100%; padding: 12px 14px 12px 42px;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; font-size: 14px; color: #fff;
+            font-family: 'Inter', sans-serif; transition: all 0.2s; outline: none;
+        }
+        .input-wrap input::placeholder { color: rgba(255,255,255,0.22); }
+        .input-wrap input:focus {
+            border-color: rgba(190,18,60,0.55);
+            background: rgba(190,18,60,0.05);
+            box-shadow: 0 0 0 3px rgba(190,18,60,0.12);
+        }
+
+        .btn-signin {
+            width: 100%; margin-top: 6px;
+            padding: 13.5px; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, #be123c 0%, #e11d48 100%);
+            color: #fff; font-family: 'Outfit', sans-serif;
+            font-size: 15px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; letter-spacing: 0.3px;
+            box-shadow: 0 8px 24px rgba(190,18,60,0.35);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-signin:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 32px rgba(190,18,60,0.5);
+        }
+        .btn-signin:active { transform: translateY(0); }
+        .btn-signin:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            margin: 26px 0 20px;
+        }
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px;
+            background: rgba(255,255,255,0.09);
+        }
+        .divider span { font-size: 11.5px; color: rgba(255,255,255,0.28); white-space: nowrap; }
+
+        .demo-title { font-size: 11px; color: rgba(255,255,255,0.3); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.8px; }
+        .accounts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .acc-chip {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 10px 12px; cursor: pointer;
+            transition: all 0.15s; text-align: left;
+        }
+        .acc-chip:hover {
+            background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+        }
+        .acc-role { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 3px; }
+        .acc-creds { font-size: 11.5px; color: rgba(255,255,255,0.45); font-family: monospace; }
+        .role-admin { color: #fb7185; }
+        .role-manager { color: #a78bfa; }
+        .role-operator { color: #34d399; }
+        .role-user { color: #60a5fa; }
+
+        .footer { text-align: center; margin-top: 28px; font-size: 11.5px; color: rgba(255,255,255,0.2); }
+
+        /* Spinner */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white; border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="grid-overlay"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="login-wrapper">
+        <div class="login-card">
+            <!-- Brand -->
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" width="26" height="26" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="9" opacity="0.85"/>
+                        <ellipse cx="12" cy="12" rx="4" ry="9" opacity="0.6"/>
+                        <line x1="12" y1="3" x2="12" y2="21" opacity="0.6"/>
+                        <line x1="3" y1="12" x2="21" y2="12" opacity="0.6"/>
+                        <path d="M2.5 16 C 5.5 10, 15.5 6, 21.5 9.5 C 16 13.5, 9.5 18.5, 2.5 16 Z" fill="white" fill-opacity="0.35" stroke="white" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>SPEC<span>TRA</span></h1>
+                    <p>Smart Platform for Excellence, Control, Tracking, Resource & Analytics</p>
+                </div>
+            </div>
+
+            <!-- Heading -->
+            <div class="login-heading">
+                <h2>Masuk ke Sistem</h2>
+                <p>Gunakan akun yang telah diberikan oleh Admin Lab</p>
+            </div>
+
+            <!-- Error Box -->
+            <div class="error-box" id="error-box">
+                <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.5" fill="none" flex-shrink="0">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span id="error-text">Username atau password salah.</span>
+            </div>
+
+            <!-- Form -->
+            <form id="login-form" onsubmit="handleLogin(event)" novalidate>
+                <div class="form-field">
+                    <label for="username">Username</label>
+                    <div class="input-wrap">
+                        <span class="icon">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </span>
+                        <input type="text" id="username" placeholder="Masukkan username" autocomplete="username" required>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="password">Password</label>
+                    <div class="input-wrap">
+                        <span class="icon">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                        </span>
+                        <input type="password" id="password" placeholder="Masukkan password" autocomplete="current-password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-signin" id="signin-btn">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                    Masuk
+                </button>
+            </form>
+
+            <!-- Demo Accounts -->
+            <div class="divider"><span>Klik untuk login cepat</span></div>
+            <div class="demo-title">Akun Demo</div>
+            <div class="accounts-grid">
+                <button class="acc-chip" onclick="quickLogin('admin','admin123')">
+                    <div class="acc-role role-admin">⚙️ Admin</div>
+                    <div class="acc-creds">admin / admin123</div>
+                </button>
+                <button class="acc-chip" onclick="quickLogin('manager1','mgr123')">
+                    <div class="acc-role role-manager">👔 Manager</div>
+                    <div class="acc-creds">manager1 / mgr123</div>
+                </button>
+                <button class="acc-chip" onclick="quickLogin('operator1','op123')">
+                    <div class="acc-role role-operator">🔬 Operator</div>
+                    <div class="acc-creds">operator1 / op123</div>
+                </button>
+                <button class="acc-chip" onclick="quickLogin('user1','user123')">
+                    <div class="acc-role role-user">👤 User</div>
+                    <div class="acc-creds">user1 / user123</div>
+                </button>
+            </div>
+
+            <p class="footer">SPECTRA LMS Portal &copy; 2026 &mdash; Semua hak dilindungi</p>
+        </div>
+    </div>
+
+    <script>
+        // Redirect if already logged in
+        try {
+            const s = localStorage.getItem('tl_session');
+            if (s) { const parsed = JSON.parse(s); if (parsed && parsed.role) window.location.href = 'index.html'; }
+        } catch(e) { localStorage.removeItem('tl_session'); }
+
+        const DEFAULT_USERS = [
+            { id:'u001', username:'admin',    password:'admin123', name:'Administrator',   role:'admin',    avatar:'AD' },
+            { id:'u002', username:'user1',    password:'user123',  name:'Ahmad Fauzi',     role:'user',     avatar:'AF' },
+            { id:'u003', username:'operator1',password:'op123',    name:'Budi Santoso',    role:'operator', avatar:'BS' },
+            { id:'u004', username:'manager1', password:'mgr123',   name:'Dr. Siti Rahayu', role:'manager',  avatar:'SR' },
+        ];
+
+        function getUsers() {
+            try { const s = localStorage.getItem('tl_users'); return s ? JSON.parse(s) : [...DEFAULT_USERS]; }
+            catch(e) { return [...DEFAULT_USERS]; }
+        }
+
+        function doLogin(username, password) {
+            const users = getUsers();
+            return users.find(u => u.username === username && u.password === password) || null;
+        }
+
+        function setSession(user) {
+            const initials = user.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+            localStorage.setItem('tl_session', JSON.stringify({
+                id: user.id, username: user.username, name: user.name,
+                role: user.role, avatar: user.avatar || initials
+            }));
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('signin-btn');
+            const errBox = document.getElementById('error-box');
+
+            errBox.classList.remove('show');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div> Memverifikasi...';
+
+            setTimeout(() => {
+                const user = doLogin(username, password);
+                if (user) {
+                    setSession(user);
+                    btn.innerHTML = '✓ Berhasil! Mengalihkan...';
+                    setTimeout(() => window.location.href = 'index.html', 400);
+                } else {
+                    document.getElementById('error-text').textContent = 'Username atau password tidak valid. Silakan coba lagi.';
+                    errBox.classList.add('show');
+                    btn.disabled = false;
+                    btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Masuk';
+                }
+            }, 700);
+        }
+
+        function quickLogin(username, password) {
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = password;
+            document.getElementById('login-form').requestSubmit();
+        }
+
+        // Animated particles
+        (function() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 25; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const size = 1.5 + Math.random() * 3;
+                p.style.cssText = `left:${Math.random()*100}%;width:${size}px;height:${size}px;animation-duration:${10+Math.random()*15}s;animation-delay:${-Math.random()*25}s;`;
+                container.appendChild(p);
+            }
+        })();
+    </script>
+</body>
+</html>

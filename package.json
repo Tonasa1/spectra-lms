@@ -1,0 +1,15 @@
+{
+  "name": "spectra-lms",
+  "version": "2.0.0",
+  "description": "SPECTRA - Smart Platform for Excellence, Control, Tracking, Resource & Analytics",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "localtunnel": "^2.0.2",
+    "ngrok": "^4.3.3"
+  }
+}
