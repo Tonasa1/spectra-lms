@@ -73,6 +73,7 @@
                 <div class="profile-info">
                     <span class="profile-name" id="user-name">Pengguna</span>
                     <span class="role-badge-sidebar" id="user-role-badge">user</span>
+                    <a href="#" onclick="openChangePasswordModal();return false;" style="font-size:0.65rem;color:var(--info-color);text-decoration:none;margin-top:2px;">🔑 Ganti Password</a>
                 </div>
             </div>
             <button class="btn-logout" onclick="logout()">
@@ -881,6 +882,33 @@
             <button class="btn btn-outline" onclick="closeModal('kaji-ulang-modal')">Batal</button>
             <button class="btn btn-primary" onclick="saveKajiUlangAndApprove()">✅ Simpan & Setujui Tiket</button>
         </div>
+</div>
+
+<!-- Modal 9: Ganti Password -->
+<div class="modal-backdrop modal-sm" id="change-password-modal">
+    <div class="modal-container" style="max-width:400px;">
+        <div class="modal-header">
+            <h2>🔑 Ganti Password</h2>
+            <button class="modal-close" onclick="closeModal('change-password-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-field-group">
+                <label for="change-pwd-old">Password Lama</label>
+                <input type="password" id="change-pwd-old" placeholder="Masukkan password lama" class="chem-input" style="padding:10px;">
+            </div>
+            <div class="form-field-group">
+                <label for="change-pwd-new">Password Baru</label>
+                <input type="password" id="change-pwd-new" placeholder="Password baru (min 4 karakter)" class="chem-input" style="padding:10px;">
+            </div>
+            <div class="form-field-group">
+                <label for="change-pwd-confirm">Konfirmasi Password Baru</label>
+                <input type="password" id="change-pwd-confirm" placeholder="Ketik ulang password baru" class="chem-input" style="padding:10px;">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('change-password-modal')">Batal</button>
+            <button class="btn btn-primary" onclick="submitChangePassword()">Simpan Password</button>
+        </div>
     </div>
 </div>
 
@@ -955,27 +983,7 @@
                 </button>
             </form>
 
-            <!-- Demo Accounts -->
-            <div class="divider"><span>Klik untuk login cepat</span></div>
-            <div class="demo-title">Akun Demo</div>
-            <div class="accounts-grid">
-                <button class="acc-chip" onclick="quickLogin('admin','admin123')">
-                    <div class="acc-role role-admin">⚙️ Admin</div>
-                    <div class="acc-creds">admin / admin123</div>
-                </button>
-                <button class="acc-chip" onclick="quickLogin('manager1','mgr123')">
-                    <div class="acc-role role-manager">👔 Manager</div>
-                    <div class="acc-creds">manager1 / mgr123</div>
-                </button>
-                <button class="acc-chip" onclick="quickLogin('operator1','op123')">
-                    <div class="acc-role role-operator">🔬 Operator</div>
-                    <div class="acc-creds">operator1 / op123</div>
-                </button>
-                <button class="acc-chip" onclick="quickLogin('user1','user123')">
-                    <div class="acc-role role-user">👤 User</div>
-                    <div class="acc-creds">user1 / user123</div>
-                </button>
-            </div>
+
 
             <p class="footer">SPECTRA LMS Portal &copy; 2026 &mdash; Semua hak dilindungi</p>
         </div>

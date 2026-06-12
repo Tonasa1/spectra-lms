@@ -583,6 +583,56 @@ function deleteUser(userId) {
     showToast('User berhasil dihapus.', 'success');
 }
 
+// === CHANGE PASSWORD FUNCTIONS ===
+function openChangePasswordModal() {
+    document.getElementById('change-pwd-old').value = '';
+    document.getElementById('change-pwd-new').value = '';
+    document.getElementById('change-pwd-confirm').value = '';
+    openModal('change-password-modal');
+}
+
+function submitChangePassword() {
+    const oldPwd = document.getElementById('change-pwd-old').value;
+    const newPwd = document.getElementById('change-pwd-new').value;
+    const confirmPwd = document.getElementById('change-pwd-confirm').value;
+
+    if (!oldPwd || !newPwd || !confirmPwd) {
+        showToast('Semua kolom password wajib diisi!', 'error');
+        return;
+    }
+
+    if (newPwd.length < 4) {
+        showToast('Password baru minimal 4 karakter!', 'error');
+        return;
+    }
+
+    if (newPwd !== confirmPwd) {
+        showToast('Konfirmasi password baru tidak cocok!', 'error');
+        return;
+    }
+
+    const users = getUsers();
+    const currentUserIndex = users.findIndex(u => u.id === currentSession.id);
+
+    if (currentUserIndex === -1) {
+        showToast('Pengguna tidak ditemukan!', 'error');
+        return;
+    }
+
+    // Verify old password
+    if (users[currentUserIndex].password !== oldPwd) {
+        showToast('Password lama Anda salah!', 'error');
+        return;
+    }
+
+    // Update password
+    users[currentUserIndex].password = newPwd;
+    saveUsers(users);
+
+    showToast('🔑 Password berhasil diganti!', 'success');
+    closeModal('change-password-modal');
+}
+
 // ============================================================
 // SECTION 4: CATALOG MANAGEMENT
 // ============================================================
