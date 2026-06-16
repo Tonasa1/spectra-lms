@@ -2,6 +2,131 @@
 // SPECTRA v2.0 - Complete Application Script
 // ============================================================
 
+// Shadow global storage objects to prevent exceptions in private browsing mode
+const localStorage = (function() {
+    let storageAvailable = false;
+    try {
+        const testKey = '__storage_test__';
+        window.localStorage.setItem(testKey, testKey);
+        window.localStorage.removeItem(testKey);
+        storageAvailable = true;
+    } catch (e) {
+        storageAvailable = false;
+    }
+
+    const fallbackStorage = {};
+
+    return {
+        getItem(key) {
+            if (storageAvailable) {
+                try {
+                    return window.localStorage.getItem(key);
+                } catch (e) {
+                    console.warn('localStorage.getItem failed, using fallback:', e);
+                }
+            }
+            return fallbackStorage[key] !== undefined ? fallbackStorage[key] : null;
+        },
+        setItem(key, value) {
+            if (storageAvailable) {
+                try {
+                    window.localStorage.setItem(key, value);
+                    return;
+                } catch (e) {
+                    console.warn('localStorage.setItem failed, using fallback:', e);
+                }
+            }
+            fallbackStorage[key] = String(value);
+        },
+        removeItem(key) {
+            if (storageAvailable) {
+                try {
+                    window.localStorage.removeItem(key);
+                    return;
+                } catch (e) {
+                    console.warn('localStorage.removeItem failed, using fallback:', e);
+                }
+            }
+            delete fallbackStorage[key];
+        },
+        clear() {
+            if (storageAvailable) {
+                try {
+                    window.localStorage.clear();
+                    return;
+                } catch (e) {
+                    console.warn('localStorage.clear failed, using fallback:', e);
+                }
+            }
+            for (const key in fallbackStorage) {
+                delete fallbackStorage[key];
+            }
+        }
+    };
+})();
+
+const sessionStorage = (function() {
+    let storageAvailable = false;
+    try {
+        const testKey = '__storage_test__';
+        window.sessionStorage.setItem(testKey, testKey);
+        window.sessionStorage.removeItem(testKey);
+        storageAvailable = true;
+    } catch (e) {
+        storageAvailable = false;
+    }
+
+    const fallbackStorage = {};
+
+    return {
+        getItem(key) {
+            if (storageAvailable) {
+                try {
+                    return window.sessionStorage.getItem(key);
+                } catch (e) {
+                    console.warn('sessionStorage.getItem failed, using fallback:', e);
+                }
+            }
+            return fallbackStorage[key] !== undefined ? fallbackStorage[key] : null;
+        },
+        setItem(key, value) {
+            if (storageAvailable) {
+                try {
+                    window.sessionStorage.setItem(key, value);
+                    return;
+                } catch (e) {
+                    console.warn('sessionStorage.setItem failed, using fallback:', e);
+                }
+            }
+            fallbackStorage[key] = String(value);
+        },
+        removeItem(key) {
+            if (storageAvailable) {
+                try {
+                    window.sessionStorage.removeItem(key);
+                    return;
+                } catch (e) {
+                    console.warn('sessionStorage.removeItem failed, using fallback:', e);
+                }
+            }
+            delete fallbackStorage[key];
+        },
+        clear() {
+            if (storageAvailable) {
+                try {
+                    window.sessionStorage.clear();
+                    return;
+                } catch (e) {
+                    console.warn('sessionStorage.clear failed, using fallback:', e);
+                }
+            }
+            for (const key in fallbackStorage) {
+                delete fallbackStorage[key];
+            }
+        }
+    };
+})();
+
 // ============================================================
 // SECTION 1: CONSTANTS & DEFAULT DATA
 // ============================================================

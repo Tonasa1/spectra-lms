@@ -254,38 +254,144 @@
                 </button>
             </form>
 
-            <!-- Demo Accounts -->
-            <div class="divider"><span>Klik untuk login cepat</span></div>
-            <div class="demo-title">Akun Demo</div>
-            <div class="accounts-grid">
-                <button class="acc-chip" onclick="quickLogin('admin','admin123')">
-                    <div class="acc-role role-admin">⚙️ Admin</div>
-                    <div class="acc-creds">admin / admin123</div>
-                </button>
-                <button class="acc-chip" onclick="quickLogin('manager1','mgr123')">
-                    <div class="acc-role role-manager">👔 Manager</div>
-                    <div class="acc-creds">manager1 / mgr123</div>
-                </button>
-                <button class="acc-chip" onclick="quickLogin('operator1','op123')">
-                    <div class="acc-role role-operator">🔬 Operator</div>
-                    <div class="acc-creds">operator1 / op123</div>
-                </button>
-                <button class="acc-chip" onclick="quickLogin('user1','user123')">
-                    <div class="acc-role role-user">👤 User</div>
-                    <div class="acc-creds">user1 / user123</div>
-                </button>
-            </div>
+
 
             <p class="footer">SPECTRA LMS Portal &copy; 2026 &mdash; Semua hak dilindungi</p>
         </div>
     </div>
 
     <script>
+        // Shadow global storage objects to prevent exceptions in private browsing mode
+        const localStorage = (function() {
+            let storageAvailable = false;
+            try {
+                const testKey = '__storage_test__';
+                window.localStorage.setItem(testKey, testKey);
+                window.localStorage.removeItem(testKey);
+                storageAvailable = true;
+            } catch (e) {
+                storageAvailable = false;
+            }
+
+            const fallbackStorage = {};
+
+            return {
+                getItem(key) {
+                    if (storageAvailable) {
+                        try {
+                            return window.localStorage.getItem(key);
+                        } catch (e) {
+                            console.warn('localStorage.getItem failed, using fallback:', e);
+                        }
+                    }
+                    return fallbackStorage[key] !== undefined ? fallbackStorage[key] : null;
+                },
+                setItem(key, value) {
+                    if (storageAvailable) {
+                        try {
+                            window.localStorage.setItem(key, value);
+                            return;
+                        } catch (e) {
+                            console.warn('localStorage.setItem failed, using fallback:', e);
+                        }
+                    }
+                    fallbackStorage[key] = String(value);
+                },
+                removeItem(key) {
+                    if (storageAvailable) {
+                        try {
+                            window.localStorage.removeItem(key);
+                            return;
+                        } catch (e) {
+                            console.warn('localStorage.removeItem failed, using fallback:', e);
+                        }
+                    }
+                    delete fallbackStorage[key];
+                },
+                clear() {
+                    if (storageAvailable) {
+                        try {
+                            window.localStorage.clear();
+                            return;
+                        } catch (e) {
+                            console.warn('localStorage.clear failed, using fallback:', e);
+                        }
+                    }
+                    for (const key in fallbackStorage) {
+                        delete fallbackStorage[key];
+                    }
+                }
+            };
+        })();
+
+        const sessionStorage = (function() {
+            let storageAvailable = false;
+            try {
+                const testKey = '__storage_test__';
+                window.sessionStorage.setItem(testKey, testKey);
+                window.sessionStorage.removeItem(testKey);
+                storageAvailable = true;
+            } catch (e) {
+                storageAvailable = false;
+            }
+
+            const fallbackStorage = {};
+
+            return {
+                getItem(key) {
+                    if (storageAvailable) {
+                        try {
+                            return window.sessionStorage.getItem(key);
+                        } catch (e) {
+                            console.warn('sessionStorage.getItem failed, using fallback:', e);
+                        }
+                    }
+                    return fallbackStorage[key] !== undefined ? fallbackStorage[key] : null;
+                },
+                setItem(key, value) {
+                    if (storageAvailable) {
+                        try {
+                            window.sessionStorage.setItem(key, value);
+                            return;
+                        } catch (e) {
+                            console.warn('sessionStorage.setItem failed, using fallback:', e);
+                        }
+                    }
+                    fallbackStorage[key] = String(value);
+                },
+                removeItem(key) {
+                    if (storageAvailable) {
+                        try {
+                            window.sessionStorage.removeItem(key);
+                            return;
+                        } catch (e) {
+                            console.warn('sessionStorage.removeItem failed, using fallback:', e);
+                        }
+                    }
+                    delete fallbackStorage[key];
+                },
+                clear() {
+                    if (storageAvailable) {
+                        try {
+                            window.sessionStorage.clear();
+                            return;
+                        } catch (e) {
+                            console.warn('sessionStorage.clear failed, using fallback:', e);
+                        }
+                    }
+                    for (const key in fallbackStorage) {
+                        delete fallbackStorage[key];
+                    }
+                }
+            };
+        })();
+
         // Redirect if already logged in
         try {
             const s = localStorage.getItem('tl_session');
             if (s) { const parsed = JSON.parse(s); if (parsed && parsed.role) window.location.href = 'index.html'; }
         } catch(e) { localStorage.removeItem('tl_session'); }
+
 
         const DEFAULT_USERS = [
             { id:'u001', username:'admin',    password:'admin123', name:'Administrator',   role:'admin',    avatar:'AD' },
