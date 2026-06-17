@@ -190,6 +190,7 @@
                                         <div class="origin-sub-grid" id="origin-sub-grid">
                                             <button class="origin-sub-btn" onclick="selectOriginDetail('FM')">FM</button>
                                             <button class="origin-sub-btn" onclick="selectOriginDetail('SILO')">SILO</button>
+                                            <button class="origin-sub-btn" onclick="selectOriginDetail('SILO BKS')">SILO BKS</button>
                                             <button class="origin-sub-btn" onclick="selectOriginDetail('SCI')">SCI</button>
                                             <button class="origin-sub-btn" onclick="selectOriginDetail('CL-Exp')">CL-Exp</button>
                                             <button class="origin-sub-btn" onclick="selectOriginDetail('CL-harian')">CL-harian</button>
@@ -230,7 +231,7 @@
                                 <!-- Step 5: Nama Sampel -->
                                 <div class="req-step">
                                     <h3 class="req-step-title">NAMA / KODE SAMPEL <span class="req-required">*</span></h3>
-                                    <input type="text" class="req-text-input" id="req-sample-name" placeholder="Contoh: Semen OPC Lot-A, Klinker Batch-3...">
+                                    <textarea class="req-text-input" id="req-sample-name" placeholder="Contoh: Semen OPC Lot-A, Klinker Batch-3..." rows="3" style="width: 100%; resize: vertical; min-height: 80px;"></textarea>
                                 </div>
 
                                 <!-- Step 6: Keterangan -->
@@ -315,15 +316,21 @@
                 <div class="card table-card">
                     <div class="table-header">
                         <h2>Riwayat Tiket Pengujian</h2>
-                        <div class="table-filters">
+                        <div class="table-filters" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                            <input type="date" id="ticket-date-start" onchange="filterTicketsTable()" placeholder="Mulai Tanggal" style="padding: 6px; border: 1.5px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; background: var(--bg-secondary); color: var(--text-primary); outline: none;">
+                            <input type="date" id="ticket-date-end" onchange="filterTicketsTable()" placeholder="Sampai Tanggal" style="padding: 6px; border: 1.5px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; background: var(--bg-secondary); color: var(--text-primary); outline: none;">
                             <input type="text" id="ticket-search" placeholder="Cari Kode Tiket..." onkeyup="filterTicketsTable()">
                             <select id="ticket-status-filter" onchange="filterTicketsTable()">
                                 <option value="all">Semua Status</option>
                                 <option value="Baru">Baru</option>
+                                <option value="Disetujui Admin">Disetujui Admin</option>
+                                <option value="Ditolak Admin">Ditolak Admin</option>
+                                <option value="Sampel Diterima">Sampel Diterima</option>
                                 <option value="Diproses">Diproses</option>
                                 <option value="Menunggu Approval">Menunggu Approval</option>
                                 <option value="Selesai">Selesai</option>
                             </select>
+                            <button class="btn btn-primary btn-sm" onclick="downloadTicketsCSV(false)" style="padding: 8px 12px; font-size: 0.8rem;">📥 Download Riwayat</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -334,6 +341,7 @@
                                     <th>Tanggal</th>
                                     <th>Jumlah Sampel</th>
                                     <th>Metode Uji</th>
+                                    <th>Exp Date Sample</th>
                                     <th>Status</th>
                                     <th>Keterangan Lab</th>
                                     <th>Aksi</th>
@@ -353,15 +361,21 @@
                             <h2>Panel Manajemen Pengujian</h2>
                             <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:4px;" id="panel-role-desc">Kelola dan update status pengujian sampel masuk.</p>
                         </div>
-                        <div class="table-filters">
+                        <div class="table-filters" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                            <input type="date" id="admin-date-start" onchange="filterAdminTable()" placeholder="Mulai Tanggal" style="padding: 6px; border: 1.5px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; background: var(--bg-secondary); color: var(--text-primary); outline: none;">
+                            <input type="date" id="admin-date-end" onchange="filterAdminTable()" placeholder="Sampai Tanggal" style="padding: 6px; border: 1.5px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; background: var(--bg-secondary); color: var(--text-primary); outline: none;">
                             <input type="text" id="admin-search" placeholder="Cari Tiket..." onkeyup="filterAdminTable()">
                             <select id="admin-status-filter" onchange="filterAdminTable()">
                                 <option value="all">Semua Status</option>
                                 <option value="Baru">Baru</option>
+                                <option value="Disetujui Admin">Disetujui Admin</option>
+                                <option value="Ditolak Admin">Ditolak Admin</option>
+                                <option value="Sampel Diterima">Sampel Diterima</option>
                                 <option value="Diproses">Diproses</option>
                                 <option value="Menunggu Approval">Menunggu Approval</option>
                                 <option value="Selesai">Selesai</option>
                             </select>
+                            <button class="btn btn-primary btn-sm" onclick="downloadTicketsCSV(true)" style="padding: 8px 12px; font-size: 0.8rem;">📥 Download Riwayat</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -373,6 +387,7 @@
                                     <th>Tanggal</th>
                                     <th>Parameter Uji</th>
                                     <th>Jumlah Sampel</th>
+                                    <th>Exp Date Sample</th>
                                     <th>Status</th>
                                     <th>Keterangan Lab</th>
                                     <th>Aksi</th>
@@ -994,6 +1009,6 @@
 <!-- Toast Container -->
 <div class="toast-container" id="toast-container"></div>
 
-<script src="app.js?v=2.4.9"></script>
+<script src="app.js?v=2.5.1"></script>
 </body>
 </html>

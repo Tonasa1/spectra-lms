@@ -241,7 +241,7 @@ const DEFAULT_PARAMETER_GROUPS = [
         subGroups: [
             {
                 id:'fisika-semen', name:'Fisika Semen',
-                params:['Res. 0,045 mm','Blaine (cm²/g)','Awal (minutes)','Akhir (minutes)','FALSE SET (%)','NC (%)','AUTOCLAVE (%)','Air Of Mortar','KT 01 hari (kg/cm²)','KT 03 hari (kg/cm²)','KT 07 hari (kg/cm²)','KT 28 hari (kg/cm²)','Ketahanan Sulfat','Panas Hidrasi','Water retention']
+                params:['Res. 0,045 mm','Blaine (cm²/g)','Awal (minutes)','Akhir (minutes)','FALSE SET (%)','NC (%)','AUTOCLAVE (%)','Air Of Mortar','KT 01 hari (kg/cm²)','KT 03 hari (kg/cm²)','KT 07 hari (kg/cm²)','KT 28 hari (kg/cm²)','Ketahanan Sulfat','Panas Hidrasi 3D','Panas Hidrasi 7D','Water retention','Mortar Bar Expantion','Bulk Density','Bj Semen','Ketahana Sulfat 4D','Ketahana Sulfat 180D','Ketahana Sulfat 360D']
             },
             {
                 id:'fisika-klinker', name:'Fisika Klinker',
@@ -1529,9 +1529,19 @@ function toggleSubGroupCollapse(sgId) {
 
 // --- Asal Contoh ---
 function renderOriginSection() {
+    const role = getRole();
     const btnInt = document.getElementById('origin-btn-internal');
     const btnExt = document.getElementById('origin-btn-external');
     const detailDiv = document.getElementById('origin-internal-detail');
+    
+    if (role === 'user') {
+        if (btnInt) btnInt.style.display = 'none';
+        reqForm.origin = 'external';
+        reqForm.originDetail = null;
+    } else {
+        if (btnInt) btnInt.style.display = '';
+    }
+
     if (btnInt) btnInt.classList.toggle('selected', reqForm.origin === 'internal');
     if (btnExt) btnExt.classList.toggle('selected', reqForm.origin === 'external');
     if (detailDiv) detailDiv.style.display = reqForm.origin === 'internal' ? 'block' : 'none';
@@ -1721,7 +1731,7 @@ function renderRequestListSidebar() {
         <div class="req-list-item">
             <div class="req-list-item-header">
                 <div>
-                    <strong>${entry.sampleName}</strong>
+                    <strong style="white-space: pre-wrap; display: block; margin-bottom: 4px;">${entry.sampleName}</strong>
                     <span style="font-size:0.72rem;color:var(--text-light);margin-left:4px;">(${entry.material})</span>
                 </div>
                 <button class="req-list-item-remove" onclick="removeFromRequestList(${i})" title="Hapus">&times;</button>
@@ -1781,6 +1791,7 @@ function submitRequestFromForm() {
         requester: currentSession.name, requesterId: currentSession.id,
         status: 'Baru', tests, samples,
         totalCost: 0,
+        expDuration: '6 Bulan',
         timeline: { ordered: dateStr, received:null, testing:null, approved:null, completed:null }
     };
 
@@ -1820,9 +1831,13 @@ function renderTicketsTable() {
 
     const search = document.getElementById('ticket-search')?.value.toLowerCase() || '';
     const statusFilter = document.getElementById('ticket-status-filter')?.value || 'all';
+    const startVal = document.getElementById('ticket-date-start')?.value;
+    const endVal = document.getElementById('ticket-date-end')?.value;
 
     if (search) tickets = tickets.filter(t => t.id.toLowerCase().includes(search) || t.requester.toLowerCase().includes(search));
     if (statusFilter !== 'all') tickets = tickets.filter(t => t.status === statusFilter);
+    if (startVal) tickets = tickets.filter(t => t.date >= startVal);
+    if (endVal) tickets = tickets.filter(t => t.date <= endVal);
 
     const results = getResults();
 
@@ -1850,14 +1865,30 @@ function renderTicketsTable() {
             }
         }
 
+        const expDur = t.expDuration || '6 Bulan';
+        const expDate = calculateExpDate(t.date, expDur);
+        const expDateFormatted = formatDate(expDate);
+        const expSelectHtml = `
+            <div style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
+                <select class="chem-input" style="padding:2px 4px; font-size:0.75rem; min-width:85px; margin:0;" onchange="changeTicketExpDuration('${t.id}', this.value)">
+                    <option value="1 Bulan" ${expDur === '1 Bulan' ? 'selected' : ''}>1 Bulan</option>
+                    <option value="3 Bulan" ${expDur === '3 Bulan' ? 'selected' : ''}>3 Bulan</option>
+                    <option value="6 Bulan" ${expDur === '6 Bulan' ? 'selected' : ''}>6 Bulan</option>
+                    <option value="12 Bulan" ${expDur === '12 Bulan' ? 'selected' : ''}>12 Bulan</option>
+                </select>
+                <span style="font-size:0.7rem; color:var(--text-secondary); text-align:center;">${expDateFormatted}</span>
+            </div>
+        `;
+
         return `<tr>
             <td><code style="color:var(--primary-color);font-weight:600;">${t.id}</code>${selfServiceBadge}</td>
             <td>${formatDate(t.date)}</td>
             <td style="text-align:center;">${totalSamples}</td>
-            <td style="font-size:0.8rem;max-width:200px;white-space:normal;">
+            <td style="font-size:0.8rem;max-width:200px;white-space:pre-wrap;">
                 <div style="font-weight:500;">${displayText}</div>
                 <div style="font-size:0.72rem;color:var(--text-light);">${groupsDisplay}</div>
             </td>
+            <td>${expSelectHtml}</td>
             <td>${statusBadge}</td>
             <td style="font-size:0.8rem;color:var(--text-secondary);max-width:150px;white-space:normal;word-break:break-word;">
                 ${t.labRemarks || '-'}
@@ -1882,14 +1913,18 @@ function renderAdminTable() {
 
     const search = document.getElementById('admin-search')?.value.toLowerCase() || '';
     const statusFilter = document.getElementById('admin-status-filter')?.value || 'all';
+    const startVal = document.getElementById('admin-date-start')?.value;
+    const endVal = document.getElementById('admin-date-end')?.value;
 
     if (search) tickets = tickets.filter(t => t.id.toLowerCase().includes(search) || t.requester.toLowerCase().includes(search));
     if (statusFilter !== 'all') tickets = tickets.filter(t => t.status === statusFilter);
+    if (startVal) tickets = tickets.filter(t => t.date >= startVal);
+    if (endVal) tickets = tickets.filter(t => t.date <= endVal);
 
     const results = getResults();
 
     if (tickets.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-light);">Tidak ada tiket.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--text-light);">Tidak ada tiket.</td></tr>';
         return;
     }
 
@@ -1957,15 +1992,31 @@ function renderAdminTable() {
                </div>`
             : `<span style="font-size:0.8rem;color:var(--text-secondary);max-width:140px;white-space:normal;word-break:break-word;">${remarksDisplay}</span>`;
 
+        const expDur = t.expDuration || '6 Bulan';
+        const expDate = calculateExpDate(t.date, expDur);
+        const expDateFormatted = formatDate(expDate);
+        const expSelectHtml = `
+            <div style="display:flex; flex-direction:column; gap:4px; font-size:0.75rem;">
+                <select class="chem-input" style="padding:2px 4px; font-size:0.75rem; min-width:85px; margin:0;" onchange="changeTicketExpDuration('${t.id}', this.value)">
+                    <option value="1 Bulan" ${expDur === '1 Bulan' ? 'selected' : ''}>1 Bulan</option>
+                    <option value="3 Bulan" ${expDur === '3 Bulan' ? 'selected' : ''}>3 Bulan</option>
+                    <option value="6 Bulan" ${expDur === '6 Bulan' ? 'selected' : ''}>6 Bulan</option>
+                    <option value="12 Bulan" ${expDur === '12 Bulan' ? 'selected' : ''}>12 Bulan</option>
+                </select>
+                <span style="font-size:0.7rem; color:var(--text-secondary); text-align:center;">${expDateFormatted}</span>
+            </div>
+        `;
+
         return `<tr>
             <td><code style="color:var(--primary-color);font-weight:600;">${t.id}</code>${selfServiceBadge}</td>
             <td>${t.requester}</td>
             <td>${formatDate(t.date)}</td>
-            <td style="font-size:0.8rem;max-width:180px;white-space:normal;">
+            <td style="font-size:0.8rem;max-width:180px;white-space:pre-wrap;">
                 <div style="font-weight:500;">${displayText}</div>
                 <div style="font-size:0.72rem;color:var(--text-light);">${groupsDisplay}</div>
             </td>
             <td style="text-align:center;">${totalSamples}</td>
+            <td>${expSelectHtml}</td>
             <td>${statusBadge}</td>
             <td>${remarksHtml}</td>
             <td><div class="action-btns">${actionBtns}</div></td>
@@ -2149,6 +2200,7 @@ function printKajiUlang(ticketId) {
             <tr><td>Asal Contoh</td><td>:</td><td>${asalContoh}</td></tr>
             <tr><td>Kode Contoh</td><td>:</td><td>${kodeContoh}</td></tr>
             <tr><td>Jenis Contoh</td><td>:</td><td>${jenisContoh}</td></tr>
+            <tr><td>Nama / Kode Sampel</td><td>:</td><td style="white-space: pre-wrap;">${t.samples && t.samples.length > 0 ? t.samples.map(s => s.name).join(', ') : '-'}</td></tr>
             <tr><td>Standar/Metode</td><td>:</td><td>${methods}</td></tr>
         </table>
 
@@ -2277,7 +2329,7 @@ function openTicketModal(ticketId) {
                 <div class="modal-sample-header">
                     <div>
                         <span class="modal-sample-num">#${idx+1}</span>
-                        <strong class="modal-sample-name">${s.name}</strong>
+                        <strong class="modal-sample-name" style="white-space: pre-wrap;">${s.name}</strong>
                         <span class="badge badge-neutral" style="font-size:0.68rem;margin-left:6px;">${s.material||''}</span>
                         ${s.origin ? `<span class="badge" style="font-size:0.65rem;margin-left:4px;background:var(--info-light);color:var(--info-color);">🏷️ ${s.origin === 'internal' && s.originDetail ? s.originDetail : s.origin}</span>` : ''}
                     </div>
@@ -2703,6 +2755,120 @@ function formatDate(dateStr) {
     } catch(e) { return dateStr; }
 }
 
+function calculateExpDate(dateStr, durationStr) {
+    if (!dateStr) return '-';
+    try {
+        const date = new Date(dateStr);
+        const months = parseInt(durationStr) || 6;
+        date.setMonth(date.getMonth() + months);
+        return date.toISOString().split('T')[0];
+    } catch(e) {
+        return '-';
+    }
+}
+
+function changeTicketExpDuration(ticketId, newDuration) {
+    const tickets = getTickets();
+    const idx = tickets.findIndex(t => t.id === ticketId);
+    if (idx === -1) return;
+    
+    tickets[idx].expDuration = newDuration;
+    saveTickets(tickets);
+    
+    if (typeof currentScreen !== 'undefined') {
+        if (currentScreen === 'requests') {
+            renderTicketsTable();
+        } else if (currentScreen === 'admin') {
+            renderAdminTable();
+        }
+    }
+    showToast(`⏳ Masa simpan tiket ${ticketId} diubah menjadi ${newDuration}`, 'success');
+}
+
+function downloadTicketsCSV(isAdmin = false) {
+    let tickets = getTickets();
+    const role = getRole();
+    if (role === 'user' && !isAdmin) {
+        tickets = tickets.filter(t => t.requesterId === currentSession.id);
+    }
+
+    const searchId = isAdmin ? 'admin-search' : 'ticket-search';
+    const statusId = isAdmin ? 'admin-status-filter' : 'ticket-status-filter';
+    const startId = isAdmin ? 'admin-date-start' : 'ticket-date-start';
+    const endId = isAdmin ? 'admin-date-end' : 'ticket-date-end';
+
+    const search = document.getElementById(searchId)?.value.toLowerCase() || '';
+    const statusFilter = document.getElementById(statusId)?.value || 'all';
+    const startVal = document.getElementById(startId)?.value;
+    const endVal = document.getElementById(endId)?.value;
+
+    if (search) {
+        tickets = tickets.filter(t => t.id.toLowerCase().includes(search) || t.requester.toLowerCase().includes(search));
+    }
+    if (statusFilter !== 'all') {
+        tickets = tickets.filter(t => t.status === statusFilter);
+    }
+    if (startVal) {
+        tickets = tickets.filter(t => t.date >= startVal);
+    }
+    if (endVal) {
+        tickets = tickets.filter(t => t.date <= endVal);
+    }
+
+    if (tickets.length === 0) {
+        showToast('Tidak ada data tiket untuk diunduh.', 'warning');
+        return;
+    }
+
+    const headers = ['ID Tiket', 'Tanggal', 'Pengaju', 'Jumlah Sampel', 'Metode Uji', 'Status', 'Keterangan Lab', 'Masa Simpan (Exp Date)', 'Tanggal Kadaluarsa'];
+    
+    const rows = tickets.map(t => {
+        const totalSamples = t.samples ? t.samples.reduce((s, sp) => s + (sp.count || 1), 0) : 0;
+        const sampleNames = t.samples && t.samples.length > 0
+            ? t.samples.map(s => s.name).join(', ')
+            : t.tests.join(', ');
+        const expDur = t.expDuration || '6 Bulan';
+        const expDate = calculateExpDate(t.date, expDur);
+        
+        return [
+            t.id,
+            t.date,
+            t.requester,
+            totalSamples,
+            sampleNames.replace(/"/g, '""'),
+            t.status,
+            (t.labRemarks || '-').replace(/"/g, '""'),
+            expDur,
+            expDate
+        ];
+    });
+
+    const csvContent = "\uFEFF" + [headers, ...rows].map(e => e.map(val => `"${val}"`).join(';')).join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    let filename = isAdmin ? 'Riwayat_Manajemen_Tiket' : 'Riwayat_Tiket_Pengujian';
+    if (startVal && endVal) {
+        filename += `_${startVal}_hingga_${endVal}`;
+    } else if (startVal) {
+        filename += `_dari_${startVal}`;
+    } else if (endVal) {
+        filename += `_hingga_${endVal}`;
+    }
+    filename += '.csv';
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showToast('📥 Riwayat pengujian berhasil diunduh!', 'success');
+}
+
 function openModal(id) {
     const el = document.getElementById(id);
     if (el) {
@@ -2832,6 +2998,7 @@ function printApprovalCertificate() {
                 <tr><th>ID Tiket</th><td>: ${t.id}</td></tr>
                 <tr><th>Nama Pengaju</th><td>: ${t.requester}</td></tr>
                 <tr><th>Jenis Sampel</th><td>: ${t.samples && t.samples[0] ? t.samples[0].material : '-'}</td></tr>
+                <tr><th>Nama / Kode Sampel</th><td style="white-space: pre-wrap;">: ${t.samples && t.samples.length > 0 ? t.samples.map(s => s.name).join(', ') : '-'}</td></tr>
                 <tr><th>Tanggal Selesai</th><td>: ${dateStr}</td></tr>
                 <tr><th>Manager Penyetuju</th><td>: ${result.approvedByName || result.approvedBy}</td></tr>
             </table>
