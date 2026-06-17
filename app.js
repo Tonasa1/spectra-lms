@@ -2071,14 +2071,16 @@ function printKajiUlang(ticketId) {
     
     if (kuData.length > 0) {
         kuData.forEach((item, idx) => {
-            const isOk = item.status === 'Diterima';
+            const isOk = (item.status || 'Diterima') === 'Diterima';
             const statusMark = isOk ? '✔️' : '❌';
+            const statusText = item.status || 'Diterima';
+            const noteText = item.note ? `${statusText} - ${item.note}` : statusText;
             tbodyHtml += `
                 <tr>
                     <td style="text-align:center;border:1px solid #000;padding:8px;">${idx + 1}</td>
                     <td style="border:1px solid #000;padding:8px;">${item.param}</td>
-                    <td style="border:1px solid #000;padding:8px;text-align:center;">${statusMark} ${item.status}</td>
-                    <td style="border:1px solid #000;padding:8px;">${item.note || '-'}</td>
+                    <td style="border:1px solid #000;padding:8px;text-align:center;font-size:1.1rem;">${statusMark}</td>
+                    <td style="border:1px solid #000;padding:8px;">${noteText}</td>
                 </tr>
             `;
         });
@@ -2094,12 +2096,21 @@ function printKajiUlang(ticketId) {
                 <tr>
                     <td style="text-align:center;border:1px solid #000;padding:8px;">${idx + 1}</td>
                     <td style="border:1px solid #000;padding:8px;">${p}</td>
-                    <td style="border:1px solid #000;padding:8px;text-align:center;">✔️ Diterima</td>
-                    <td style="border:1px solid #000;padding:8px;">-</td>
+                    <td style="border:1px solid #000;padding:8px;text-align:center;font-size:1.1rem;">✔️</td>
+                    <td style="border:1px solid #000;padding:8px;">Diterima</td>
                 </tr>
             `;
         });
     }
+
+    // QR Code for Requester Signature
+    const reqDate = formatDate(t.date);
+    const reqBarcodeData = encodeURIComponent(`TICKET:${t.id}|REQUEST|BY:${t.requester}|DATE:${reqDate}`);
+    const reqQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${reqBarcodeData}`;
+    const reqQrHtml = `
+        <img src="${reqQrUrl}" alt="QR Signature Requester" style="margin: 10px 0;">
+        <p style="font-size:12px;">Diajukan secara digital oleh:<br><strong>${t.requester}</strong><br>${reqDate}</p>
+    `;
 
     // QR Code for Admin Approval
     let qrHtml = '<br><br><br><p>( ................................ )</p>';
@@ -2158,8 +2169,7 @@ function printKajiUlang(ticketId) {
         <div style="margin-top:50px;display:flex;justify-content:space-between;text-align:center;">
             <div style="width:200px;">
                 <p>Pengaju</p>
-                <br><br><br>
-                <p><strong>${t.requester}</strong></p>
+                ${reqQrHtml}
             </div>
             <div style="width:200px;">
                 <p>Penyelia Laboratorium / Admin</p>
