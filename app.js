@@ -1182,9 +1182,16 @@ function updateTicketStatus(ticketId, newStatus) {
     const idx = tickets.findIndex(t => t.id === ticketId);
     if (idx === -1) return;
     tickets[idx].status = newStatus;
-    if (newStatus === 'Diproses' && !tickets[idx].timeline.received) tickets[idx].timeline.received = new Date().toISOString().split('T')[0];
-    if (newStatus === 'Diproses' && !tickets[idx].timeline.testing) tickets[idx].timeline.testing = new Date().toISOString().split('T')[0];
-    if (newStatus === 'Selesai') { tickets[idx].timeline.approved = new Date().toISOString().split('T')[0]; tickets[idx].timeline.completed = new Date().toISOString().split('T')[0]; }
+    if (newStatus === 'Sampel Diterima' && !tickets[idx].timeline.received) {
+        tickets[idx].timeline.received = new Date().toISOString().split('T')[0];
+    }
+    if (newStatus === 'Diproses' && !tickets[idx].timeline.testing) {
+        tickets[idx].timeline.testing = new Date().toISOString().split('T')[0];
+    }
+    if (newStatus === 'Selesai') {
+        tickets[idx].timeline.approved = new Date().toISOString().split('T')[0];
+        tickets[idx].timeline.completed = new Date().toISOString().split('T')[0];
+    }
     saveTickets(tickets);
 }
 
@@ -1903,7 +1910,10 @@ function renderAdminTable() {
 
         // Operator / Admin actions
         if (role === 'operator' || role === 'admin') {
-            if (t.status === 'Disetujui Admin') {
+            if (t.status === 'Disetujui Admin' && role === 'admin') {
+                actionBtns += ` <button class="btn-success" onclick="handoverSample('${t.id}')">🤝 Serah Terima</button>`;
+            }
+            if (t.status === 'Sampel Diterima') {
                 actionBtns += ` <button class="btn-warning" onclick="moveToProcess('${t.id}')">▶ Proses</button>`;
             }
             if (t.status === 'Diproses') {
@@ -2187,8 +2197,18 @@ function adminRejectTicket(ticketId) {
     showToast('❌ Permintaan pengujian ditolak.', 'warning');
 }
 
+function handoverSample(ticketId) {
+    if (!confirm('Lakukan serah terima sampel ke operator untuk diuji?')) return;
+    updateTicketStatus(ticketId, 'Sampel Diterima');
+    renderAdminTable();
+    renderTicketsTable();
+    updateKPI();
+    refreshDashboard();
+    showToast('🤝 Sampel telah diserahterimakan ke operator.', 'success');
+}
+
 function moveToProcess(ticketId) {
-    if (!confirm('Tandai sampel sudah diterima dan mulai proses pengujian?')) return;
+    if (!confirm('Mulai proses pengujian untuk sampel ini?')) return;
     updateTicketStatus(ticketId, 'Diproses');
     renderAdminTable();
     renderTicketsTable();
@@ -2343,7 +2363,7 @@ function updateKPI() {
 
     const total = tickets.length;
     const baru = tickets.filter(t => t.status === 'Baru').length;
-    const diproses = tickets.filter(t => t.status === 'Diproses' || t.status === 'Menunggu Approval').length;
+    const diproses = tickets.filter(t => t.status === 'Disetujui Admin' || t.status === 'Sampel Diterima' || t.status === 'Diproses' || t.status === 'Menunggu Approval').length;
     const selesai = tickets.filter(t => t.status === 'Selesai').length;
     const totalSamples = tickets.reduce((s,t) => s + (t.samples||[]).reduce((ss,sp)=>ss+(sp.count||1),0), 0);
 
@@ -2397,7 +2417,7 @@ function drawDonutChart() {
     const tickets = getRole() === 'user' ? getTickets().filter(t => t.requesterId === currentSession.id) : getTickets();
 
     const baru = tickets.filter(t=>t.status==='Baru').length;
-    const diproses = tickets.filter(t=>t.status==='Diproses').length;
+    const diproses = tickets.filter(t=>t.status==='Disetujui Admin' || t.status==='Sampel Diterima' || t.status==='Diproses').length;
     const approval = tickets.filter(t=>t.status==='Menunggu Approval').length;
     const selesai = tickets.filter(t=>t.status==='Selesai').length;
     const total = baru + diproses + approval + selesai || 1;
@@ -2657,6 +2677,7 @@ function getStatusBadge(status) {
         'Baru':              '<span class="badge badge-info">🆕 Baru</span>',
         'Disetujui Admin':   '<span class="badge" style="background:#dcfce7;color:#16a34a;border:1px solid #bbf7d0;">✅ Disetujui Admin</span>',
         'Ditolak Admin':     '<span class="badge" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;">❌ Ditolak Admin</span>',
+        'Sampel Diterima':   '<span class="badge" style="background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;">🤝 Sampel Diterima</span>',
         'Diproses':          '<span class="badge badge-warning">🔬 Diproses</span>',
         'Menunggu Approval': '<span class="badge-approval">⏳ Menunggu Approval</span>',
         'Selesai':           '<span class="badge badge-success">✅ Selesai</span>',
@@ -2956,7 +2977,7 @@ function refreshDashboard() {
 
     const totalSamples = visibleTickets.reduce((s, t) => s + (t.samples ? t.samples.reduce((ss, sp) => ss + (sp.count||1), 0) : 0), 0);
     const newCount     = visibleTickets.filter(t => t.status === 'Baru').length;
-    const processCount = visibleTickets.filter(t => t.status === 'Diproses' || t.status === 'Disetujui Admin').length;
+    const processCount = visibleTickets.filter(t => t.status === 'Disetujui Admin' || t.status === 'Sampel Diterima' || t.status === 'Diproses' || t.status === 'Menunggu Approval').length;
     const doneCount    = visibleTickets.filter(t => t.status === 'Selesai').length;
 
     const setKpi = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
