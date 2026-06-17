@@ -127,6 +127,29 @@ const sessionStorage = (function() {
     };
 })();
 
+// Global Error Logger for UI Diagnostics
+window.onerror = function(message, source, lineno, colno, error) {
+    const errorMsg = `Global JS Error: ${message} (at ${source || 'unknown'}:${lineno || 0})`;
+    console.error(errorMsg, error);
+    if (typeof showToast === 'function') {
+        showToast(`❌ ${message}`, 'error');
+    } else {
+        alert(errorMsg);
+    }
+    return false;
+};
+
+window.onunhandledrejection = function(event) {
+    const reasonMsg = event.reason ? event.reason.message || event.reason : 'Unknown rejection';
+    const errorMsg = `Unhandled Promise Rejection: ${reasonMsg}`;
+    console.error(errorMsg, event.reason);
+    if (typeof showToast === 'function') {
+        showToast(`❌ Promise: ${reasonMsg}`, 'error');
+    } else {
+        alert(errorMsg);
+    }
+};
+
 // ============================================================
 // SECTION 1: CONSTANTS & DEFAULT DATA
 // ============================================================
@@ -546,10 +569,7 @@ function handleLogin(e) {
                 
                 // Refresh app
                 if (checkAuth()) {
-                    setupRBAC();
-                    renderCatalog();
-                    renderCart();
-                    updateKPI();
+                    initApp();
                 }
             }, 400);
         } else {
@@ -2880,13 +2900,7 @@ function showToast(msg, type = 'success') {
 }
 
 
-// ============================================================
-// SECTION 18: APP INITIALIZATION
-// ============================================================
-
-document.addEventListener('DOMContentLoaded', async function() {
-    if (!checkAuth()) return;
-
+async function initApp() {
     // Restore theme
     const savedTheme = localStorage.getItem('tl_theme');
     if (savedTheme === 'dark') {
@@ -2900,6 +2914,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Preload database
     await preloadDatabase();
     
+    renderCatalog();
     initAnnouncement();
     renderCart();
     updateKPI();
@@ -2907,7 +2922,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Start database sync polling
     startDatabasePolling();
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    if (checkAuth()) {
+        await initApp();
+    }
 });
+
 
 // ============================================================
 // SECTION 19: DASHBOARD
