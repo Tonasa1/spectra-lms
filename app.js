@@ -310,6 +310,7 @@ let cachedUsers = null;
 let cachedConfig = null;
 let cachedAnnouncement = null;
 let cachedChemicalConfig = null;
+let cachedCatalogOverrides = null;
 
 function initLocalStorageFallback() {
     try {
@@ -335,6 +336,12 @@ function initLocalStorageFallback() {
         cachedConfig = s ? JSON.parse(s) : {};
     } catch(e) {}
     if (!cachedConfig) cachedConfig = {};
+
+    try {
+        const s = localStorage.getItem('tl_catalog_overrides');
+        cachedCatalogOverrides = s ? JSON.parse(s) : null;
+    } catch(e) {}
+    if (!cachedCatalogOverrides) cachedCatalogOverrides = { prices:{}, params:{}, custom:[] };
 }
 
 function initAnnouncementLocalStorage() {
@@ -359,13 +366,14 @@ async function preloadDatabase() {
             badge.style.color = '#fff';
         }
         try {
-            const [resTickets, resResults, resUsers, resConfig, resAnnouncement, resChemCfg] = await Promise.all([
+            const [resTickets, resResults, resUsers, resConfig, resAnnouncement, resChemCfg, resCatalog] = await Promise.all([
                 fetch('/api/tickets').then(r => r.json()),
                 fetch('/api/results').then(r => r.json()),
                 fetch('/api/users').then(r => r.json()),
                 fetch('/api/config').then(r => r.json()),
                 fetch('/api/announcement').then(r => r.json()),
-                fetch('/api/chemical-config').then(r => r.json())
+                fetch('/api/chemical-config').then(r => r.json()),
+                fetch('/api/catalog').then(r => r.json())
             ]);
             
             cachedTickets = resTickets;
@@ -374,6 +382,23 @@ async function preloadDatabase() {
             cachedConfig = resConfig;
             cachedAnnouncement = resAnnouncement;
             cachedChemicalConfig = resChemCfg;
+            const hasLocalData = cachedCatalogOverrides && (
+                Object.keys(cachedCatalogOverrides.prices || {}).length > 0 ||
+                Object.keys(cachedCatalogOverrides.params || {}).length > 0 ||
+                (cachedCatalogOverrides.custom || []).length > 0
+            );
+            const hasServerData = resCatalog && (
+                Object.keys(resCatalog.prices || {}).length > 0 ||
+                Object.keys(resCatalog.params || {}).length > 0 ||
+                (resCatalog.custom || []).length > 0
+            );
+            
+            if (hasLocalData && !hasServerData) {
+                saveCatalogOverrides(cachedCatalogOverrides);
+            } else {
+                cachedCatalogOverrides = resCatalog || { prices:{}, params:{}, custom:[] };
+                localStorage.setItem('tl_catalog_overrides', JSON.stringify(cachedCatalogOverrides));
+            }
             
             console.log("Database preloaded from server.");
         } catch (e) {
@@ -411,6 +436,21 @@ function startDatabasePolling() {
             const resResults = await fetch('/api/results').then(r => r.json());
             if (JSON.stringify(resResults) !== JSON.stringify(cachedResults)) {
                 cachedResults = resResults;
+            }
+            const resCatalog = await fetch('/api/catalog').then(r => r.json());
+            if (JSON.stringify(resCatalog) !== JSON.stringify(cachedCatalogOverrides)) {
+                cachedCatalogOverrides = resCatalog;
+                if (typeof currentScreen !== 'undefined') {
+                    if (currentScreen === 'config') {
+                        renderPricesTable();
+                        renderItemsTable();
+                        renderParamsSelect();
+                    }
+                    if (currentScreen === 'cart') {
+                        renderRequestForm();
+                    }
+                }
+                renderCatalog();
             }
         } catch(e) {}
     }, 5000);
@@ -783,11 +823,24 @@ function submitChangePassword() {
 // ============================================================
 
 function getCatalogOverrides() {
-    try { const s = localStorage.getItem('tl_catalog_overrides'); return s ? JSON.parse(s) : { prices:{}, params:{}, custom:[] }; }
-    catch(e) { return { prices:{}, params:{}, custom:[] }; }
+    if (!cachedCatalogOverrides) {
+        try { const s = localStorage.getItem('tl_catalog_overrides'); cachedCatalogOverrides = s ? JSON.parse(s) : { prices:{}, params:{}, custom:[] }; }
+        catch(e) { cachedCatalogOverrides = { prices:{}, params:{}, custom:[] }; }
+    }
+    return cachedCatalogOverrides;
 }
 
-function saveCatalogOverrides(overrides) { localStorage.setItem('tl_catalog_overrides', JSON.stringify(overrides)); }
+function saveCatalogOverrides(overrides) {
+    cachedCatalogOverrides = overrides;
+    localStorage.setItem('tl_catalog_overrides', JSON.stringify(overrides));
+    if (IS_ONLINE_MODE) {
+        fetch('/api/catalog', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(overrides)
+        }).catch(e => console.error("Failed to save catalog overrides to server:", e));
+    }
+}
 
 function getCatalogData() {
     const overrides = getCatalogOverrides();

@@ -212,6 +212,19 @@ app.post('/api/chemical-config', (req, res) => {
     res.json({ success: true });
 });
 
+// 7. Catalog Overrides (Katalog kustom & harga)
+app.get('/api/catalog', (req, res) => {
+    const defaultData = { prices: {}, params: {}, custom: [] };
+    const data = readDb('catalog-overrides.json', defaultData);
+    res.json(data);
+});
+
+app.post('/api/catalog', (req, res) => {
+    const data = req.body;
+    writeDb('catalog-overrides.json', data);
+    res.json({ success: true });
+});
+
 // Wildcard fallback to index.html for SPA routing (if any)
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
